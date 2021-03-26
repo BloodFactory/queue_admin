@@ -1,0 +1,163 @@
+<template>
+    <q-dialog ref="dialog">
+        <q-card style="width: 600px">
+            <q-card-section class="bg-primary text-white">
+                <div class="text-h6">Пользователь</div>
+            </q-card-section>
+
+            <q-card-section>
+                <q-form id="userForm" @submit="submit" @reset="onReset">
+                    <q-input label="Имя пользователя"
+                             v-model="username"
+                             :rules="[val => !!val || 'Введите имя пользователя']"/>
+
+                    <div class="row q-col-gutter-lg">
+                        <div class="col">
+                            <q-input label="Пароль"
+                                     :type="isPassword ? 'password' : 'text'"
+                                     v-model="password"
+                                     :rules="[val => id || !!val || 'Введите пароль']">
+                                <template v-slot:append>
+                                    <q-icon :name="isPassword ? 'visibility_off' : 'visibility'"
+                                            class="cursor-pointer"
+                                            @click="isPassword = !isPassword"/>
+                                </template>
+                            </q-input>
+                        </div>
+                        <div class="col">
+                            <q-input label="Пароль (ещё раз)"
+                                     :type="isConfirmPassword ? 'password' : 'text'"
+                                     v-model="confirmPassword"
+                                     :rules="[val => id || !!val || 'Введите подтверждение пароля', val => val === password || 'Не соответствует паролю']">
+                                <template v-slot:append>
+                                    <q-icon :name="isConfirmPassword ? 'visibility_off' : 'visibility'"
+                                            class="cursor-pointer"
+                                            @click="isConfirmPassword = !isConfirmPassword"/>
+                                </template>
+                            </q-input>
+                        </div>
+                    </div>
+
+                    <OrganizationSelect v-model="organization" required/>
+
+                    <div class="text-h6 q-mt-lg">Личные даные</div>
+
+                    <div class="row q-col-gutter-lg">
+                        <div class="col">
+                            <q-input label="Фамилия"
+                                     v-model="userData.lastName"
+                                     :rules="[val => !!val || 'Введите фамилию']"/>
+                        </div>
+                        <div class="col">
+                            <q-input label="Имя"
+                                     v-model="userData.firstName"
+                                     :rules="[val => id || !!val || 'Введите имя']"/>
+                        </div>
+                        <div class="col">
+                            <q-input label="Отчество"
+                                     v-model="userData.middleName"/>
+                        </div>
+                    </div>
+                </q-form>
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn form="userForm" type="submit" label="Сохранить" color="green" :loading="loading" unelevated/>
+                <q-btn form="userForm" type="reset" label="Отмена" color="red" :disabled="loading" unelevated v-close-popup/>
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
+</template>
+
+<script>
+import OrganizationSelect from "components/selects/OrganizationSelect";
+
+export default {
+    name: "UserDialog",
+    components: {OrganizationSelect},
+    data() {
+        return {
+            id: null,
+            loading: false,
+            username: '',
+            password: '',
+            confirmPassword: '',
+            organization: '',
+            userData: {
+                lastName: '',
+                firstName: '',
+                middleName: ''
+            },
+            rights: {
+                admin: false
+            },
+            isPassword: true,
+            isConfirmPassword: true
+        }
+    },
+    methods: {
+        show(id) {
+            if (null !== id) {
+                this.$api({
+                    url: '/users/' + id,
+                    method: 'get'
+                }).then(response => {
+                    const {id, username, organization, userData} = response.data;
+
+                    this.id           = id;
+                    this.username     = username;
+                    this.organization = organization;
+                    this.userData     = userData;
+
+                    this.$refs.dialog.show();
+                });
+            } else {
+                this.$refs.dialog.show();
+            }
+        },
+        submit() {
+            this.loading = true;
+
+            const url = ['/users'];
+
+            if (this.id) {
+                url.push(this.id)
+            }
+
+            this.$api({
+                url: url.join('/'),
+                method: 'post',
+                data: {
+                    username: this.username,
+                    password: this.password,
+                    confirmPassword: this.confirmPassword,
+                    organization: this.organization.value,
+                    userData: this.userData
+                }
+            }).then(response => {
+                this.$refs.dialog.hide();
+                this.$emit('save');
+            }).catch(error => {
+                this.$q.notify({
+                    message: 'Не удалось сохранить',
+                    type: 'negative'
+                });
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        onReset() {
+            this.id              = null;
+            this.username        = '';
+            this.password        = '';
+            this.confirmPassword = '';
+            this.organization    = '';
+            this.userData        = {
+                lastName: '',
+                firstName: '',
+                middleName: ''
+            }
+        }
+    }
+}
+</script>
