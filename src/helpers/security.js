@@ -10,5 +10,8 @@ export default {
     },
     setRefreshToken(refreshToken) {
         localStorage.setItem('refreshToken', refreshToken);
+    },
+    clear() {
+        localStorage.clear();
     }
 }

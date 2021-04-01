@@ -1,7 +1,8 @@
-import Vue     from 'vue';
-import Vuex    from 'vuex';
-import {api}   from 'boot/axios';
-import ability from "src/helpers/ability";
+import Vue      from 'vue';
+import Vuex     from 'vuex';
+import {api}    from 'boot/axios';
+import ability  from "src/helpers/ability";
+import security from "src/helpers/security";
 
 Vue.use(Vuex);
 
@@ -34,6 +35,8 @@ export default function (/* { ssrContext } */) {
 
         actions: {
             initApp({commit}) {
+                if (!security.getToken()) return;
+
                 return api({
                     url: '/init',
                     method: 'get'
@@ -46,6 +49,20 @@ export default function (/* { ssrContext } */) {
                     return Promise.resolve();
                 }).catch(error => {
                     return Promise.reject(error);
+                })
+            },
+            logout({commit}) {
+                return new Promise((resolve, reject) => {
+                    commit('setIsAuthorized', false);
+                    security.clear();
+                    ability.update([
+                        {
+                            action: 'open',
+                            resource: 'Login'
+                        }
+                    ]);
+
+                    resolve();
                 })
             }
         },

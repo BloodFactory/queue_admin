@@ -5,10 +5,6 @@ import routes    from './routes';
 Vue.use(VueRouter);
 
 export default async function ({store}) {
-    try {
-        await store.dispatch('initApp');
-    } catch (e) {}
-
     const Router = new VueRouter({
         scrollBehavior: () => ({x: 0, y: 0}),
         routes,
@@ -19,15 +15,6 @@ export default async function ({store}) {
         mode: process.env.VUE_ROUTER_MODE,
         // base: process.env.VUE_ROUTER_BASE
         base: process.env.DEV ? '/' : '/admin'
-    });
-
-    Router.beforeEach((to, from, next) => {
-        const isAuthorized = store.getters['getIsAuthorized'];
-
-        if (!isAuthorized && 'Login' !== to.name) return next('/login');
-        if (isAuthorized && 'Login' === to.name) return next('/');
-
-        next();
     });
 
     Router.onError(error => {

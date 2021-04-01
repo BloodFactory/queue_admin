@@ -10,10 +10,10 @@
                        @click="leftDrawerOpen = !leftDrawerOpen"/>
 
                 <q-toolbar-title>
-                    Quasar App
+                    <!--                    Quasar App-->
                 </q-toolbar-title>
 
-                <div>Quasar v{{ $q.version }}</div>
+                <q-btn label="Выход" flat @click="logout"/>
             </q-toolbar>
         </q-header>
 
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'MainLayout',
     components: {
@@ -36,6 +37,15 @@ export default {
     data() {
         return {
             leftDrawerOpen: true,
+        }
+    },
+    methods: {
+        logout() {
+            this.$store.dispatch('logout').then(() => {
+                this.$router.push({name: 'Login'});
+            }).catch(error => {
+                console.log(error);
+            });
         }
     }
 }

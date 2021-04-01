@@ -26,11 +26,6 @@ const routes = [
         ]
     },
     {
-        name: 'Login',
-        path: '/login',
-        component: () => import('pages/Login')
-    },
-    {
         path: '*',
         component: () => import('pages/Error404.vue')
     }

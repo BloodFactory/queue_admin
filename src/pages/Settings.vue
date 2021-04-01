@@ -1,27 +1,7 @@
 <template>
     <q-page padding>
-        <!--        <q-card>-->
-        <!--            <q-card-section>-->
-        <!--                <div class="text-h6">Стандартные настройки</div>-->
-        <!--            </q-card-section>-->
-
-        <!--            <q-separator/>-->
-
-        <!--            <q-card-section>-->
-        <!--                Данный раздел не является обязательным, но может облегчить создание новых записей-->
-        <!--            </q-card-section>-->
-
-        <!--            <q-separator/>-->
-
-        <!--            <q-card-actions>-->
-        <!--                <q-btn icon="mdi-cog" label="Настроить" flat @click="$refs.defaultSettingsDialog.show()"/>-->
-        <!--            </q-card-actions>-->
-        <!--        </q-card>-->
-
-        <!--        <DefaultSettingsDialog ref="defaultSettingsDialog"/>-->
-
         <SettingsTable ref="settingsTable" @openSettingsDialog="openSettingsDialog"/>
-        <SettingsDialog ref="settingsDialog"/>
+        <SettingsDialog ref="settingsDialog" @save="$refs.settingsTable.fetchList()"/>
     </q-page>
 </template>
 
@@ -41,6 +21,9 @@ export default {
         openSettingsDialog(id) {
             this.$refs.settingsDialog.show(id)
         }
+    },
+    mounted() {
+        this.$refs.settingsTable.fetchList();
     }
 }
 </script>

@@ -1,12 +1,12 @@
 <template>
-    <q-dialog ref="dialog">
+    <q-dialog ref="dialog" @hide="onReset">
         <q-card style="width: 600px">
             <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Пользователь</div>
             </q-card-section>
 
             <q-card-section>
-                <q-form id="userForm" @submit="submit" @reset="onReset">
+                <q-form id="userForm" @submit.prevent="submit">
                     <q-input label="Имя пользователя"
                              v-model="username"
                              :rules="[val => !!val || 'Введите имя пользователя']"/>
@@ -63,7 +63,7 @@
 
             <q-card-actions align="right">
                 <q-btn form="userForm" type="submit" label="Сохранить" color="green" :loading="loading" unelevated/>
-                <q-btn form="userForm" type="reset" label="Отмена" color="red" :disabled="loading" unelevated v-close-popup/>
+                <q-btn form="userForm" label="Отмена" color="red" :disabled="loading" unelevated v-close-popup/>
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -96,6 +96,9 @@ export default {
         }
     },
     methods: {
+        close() {
+            this.$refs.userForm.reset()
+        },
         show(id) {
             if (null !== id) {
                 this.$api({
