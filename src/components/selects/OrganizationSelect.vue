@@ -2,8 +2,8 @@
     <q-select label="Организация"
               v-model="localValue"
               :options="options"
+              :loading="loading"
               use-input
-              @filter="filter"
               :rules="[val => !required || val || 'Укажите организацию']"/>
 </template>
 
@@ -19,7 +19,8 @@ export default {
     },
     data() {
         return {
-            options: []
+            options: [],
+            loading: false
         }
     },
     computed: {
@@ -32,26 +33,17 @@ export default {
             }
         }
     },
-    methods: {
-        filter(val, update, abort) {
-            this.$api({
-                url: '/organizations/list',
-                method: 'get',
-                params: {
-                    filter: val
-                }
-            }).then(response => {
-                update(() => {
-                    this.options = response.data;
-                });
-            }).catch(() => {
-                abort();
-            });
+    created() {
+        this.loading = true;
 
-        },
-        test(val) {
-
-        }
+        this.$api({
+            url: '/dictionary/organizations',
+            method: 'get'
+        }).then(response => {
+            this.options = response.data;
+        }).finally(() => {
+            this.loading = false;
+        });
     }
 }
 </script>

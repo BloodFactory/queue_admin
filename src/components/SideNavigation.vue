@@ -54,6 +54,11 @@ export default {
                     label: 'Организации',
                     icon: 'mdi-office-building',
                     route: 'Organizations'
+                },
+                {
+                    label: 'Услуги',
+                    icon: 'mdi-room-service',
+                    route: 'Services'
                 }
             ]
         }

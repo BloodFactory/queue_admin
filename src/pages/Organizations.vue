@@ -1,8 +1,9 @@
 <template>
     <q-page padding>
         <OrganizationsTable ref="organizationsTable"
-                            @openOrganizationDialog="openOrganizationDialog"/>
-        <OrganizationDialog ref="organizationDialog" @save="$refs.organizationsTable.loadOrganizations()"/>
+                            @openOrganizationDialog="openServiceDialog"/>
+        <OrganizationDialog ref="organizationDialog"
+                            @save="$refs.organizationsTable.loadOrganizations()"/>
     </q-page>
 </template>
 
@@ -17,7 +18,7 @@ export default {
         OrganizationDialog
     },
     methods: {
-        openOrganizationDialog(id) {
+        openServiceDialog(id) {
             this.$refs.organizationDialog.show(id)
         }
     },
