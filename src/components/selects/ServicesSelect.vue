@@ -1,16 +1,16 @@
 <template>
-    <q-select label="Организация"
+    <q-select label="Название услуги"
               v-model="localValue"
               :options="options"
               :loading="loading"
               @filter="loadOptions"
               use-input
-              :rules="[val => !required || val || 'Укажите организацию']"/>
+              :rules="[val => !required || val || 'Укажите услугу']"/>
 </template>
 
 <script>
 export default {
-    name: "OrganizationSelect",
+    name: "ServicesSelect",
     props: {
         value: {},
         required: {
@@ -39,7 +39,7 @@ export default {
             this.loading = true;
 
             this.$api({
-                url: '/dictionary/organizations',
+                url: '/dictionary/services',
                 method: 'get'
             }).then(response => {
                 update(() => {

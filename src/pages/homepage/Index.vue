@@ -4,8 +4,8 @@
 </template>
 
 <script>
-import AdminHomepage  from "components/AdminHomepage";
-import ClientHomepage from "components/ClientHomepage";
+import AdminHomepage  from "./admin/Index";
+import ClientHomepage from "./client/Index";
 
 export default {
     name: 'PageIndex',

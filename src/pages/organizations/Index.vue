@@ -1,15 +1,15 @@
 <template>
-    <q-page padding>
+    <q-page class="bg-grey-4" padding>
         <OrganizationsTable ref="organizationsTable"
-                            @openOrganizationDialog="openServiceDialog"/>
+                            @openOrganizationDialog="openOrganizationDialog"/>
         <OrganizationDialog ref="organizationDialog"
                             @save="$refs.organizationsTable.loadOrganizations()"/>
     </q-page>
 </template>
 
 <script>
-import OrganizationsTable from "components/tables/OrganizationsTable";
-import OrganizationDialog from "components/dialogs/OrganizationDialog";
+import OrganizationsTable from "pages/organizations/OrganizationsTable";
+import OrganizationDialog from "pages/organizations/OrganizationDialog";
 
 export default {
     name: "Organizations",
@@ -18,7 +18,7 @@ export default {
         OrganizationDialog
     },
     methods: {
-        openServiceDialog(id) {
+        openOrganizationDialog(id) {
             this.$refs.organizationDialog.show(id)
         }
     },

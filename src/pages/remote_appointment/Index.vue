@@ -1,5 +1,5 @@
 <template>
-    <q-page padding>
+    <q-page class="bg-grey-4" padding>
         <ServicesTable ref="servicesTable"
                        @openServiceDialog="openServiceDialog"/>
         <ServiceDialog ref="serviceDialog"
@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import ServiceDialog from "components/dialogs/ServiceDialog";
-import ServicesTable from "components/tables/ServicesTable";
+import ServiceDialog from "./ServiceDialog";
+import ServicesTable from "./ServicesTable";
 
 export default {
     name: "Services",

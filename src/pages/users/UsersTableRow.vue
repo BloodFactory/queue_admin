@@ -16,7 +16,7 @@
             }}
         </q-td>
         <q-td>
-            {{ props.row.organization }}
+            {{ props.row.organization.label }}
         </q-td>
         <q-td auto-width>
             <q-btn v-if="$can('toggle', 'Users')"
@@ -103,7 +103,10 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        }
+        },
+        openUser(id) {
+            this.$emit('openUserDialog', id)
+        },
     }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <q-dialog ref="dialog" @hide="onReset">
+    <q-dialog ref="dialog" @hide="onReset" persistent>
         <q-card style="width: 600px">
             <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Пользователь</div>
@@ -62,9 +62,13 @@
             </q-card-section>
 
             <q-card-actions align="right">
-                <q-btn form="userForm" type="submit" label="Сохранить" color="green" :loading="loading" unelevated/>
-                <q-btn form="userForm" label="Отмена" color="red" :disabled="loading" unelevated v-close-popup/>
+                <q-btn form="userForm" type="submit" label="Сохранить" color="green" unelevated/>
+                <q-btn form="userForm" label="Отмена" color="red" unelevated v-close-popup/>
             </q-card-actions>
+
+            <q-inner-loading :showing="loading">
+                <q-spinner-hourglass size="50px" color="primary" />
+            </q-inner-loading>
         </q-card>
     </q-dialog>
 </template>
@@ -100,7 +104,11 @@ export default {
             this.$refs.userForm.reset()
         },
         show(id) {
+            this.$refs.dialog.show();
+
             if (null !== id) {
+                this.loading = true;
+
                 this.$api({
                     url: '/users/' + id,
                     method: 'get'
@@ -113,9 +121,9 @@ export default {
                     this.userData     = userData;
 
                     this.$refs.dialog.show();
+                }).finally(() => {
+                    this.loading = false;
                 });
-            } else {
-                this.$refs.dialog.show();
             }
         },
         submit() {

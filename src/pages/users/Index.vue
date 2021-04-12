@@ -1,5 +1,5 @@
 <template>
-    <q-page padding>
+    <q-page class="bg-grey-4" padding>
         <UsersTable ref="usersTable"
                     @openUserDialog="openUserDialog"/>
         <UserDialog ref="userDialog" @save="$refs.usersTable.loadUsers()"/>
@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import UsersTable from "components/tables/UsersTable";
-import UserDialog from "components/dialogs/UserDialog";
+import UsersTable from "pages/users/UsersTable";
+import UserDialog from "pages/users/UserDialog";
 
 export default {
     name: "Users",

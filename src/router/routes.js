@@ -6,27 +6,22 @@ const routes = [
             {
                 name: 'Homepage',
                 path: '',
-                component: () => import('pages/Index.vue')
-            },
-            {
-                name: 'Settings',
-                path: '/settings',
-                component: () => import('pages/Settings.vue')
+                component: () => import('pages/homepage')
             },
             {
                 name: 'Users',
                 path: '/users',
-                component: () => import('pages/Users.vue')
+                component: () => import('pages/users/Index.vue')
             },
             {
                 name: 'Organizations',
                 path: '/organizations',
-                component: () => import('pages/Organizations.vue')
+                component: () => import('pages/organizations/Index.vue')
             },
             {
                 name: 'Services',
                 path: '/services',
-                component: () => import('pages/Services.vue')
+                component: () => import('pages/services/Index.vue')
             }
         ]
     },

@@ -2,22 +2,26 @@
     <q-dialog ref="dialog" persistent>
         <q-card style="width: 400px">
             <q-card-section>
-                <q-form>
+                <q-form id="serviceForm" ref="form" @submit.prevent="save">
                     <q-input label="Название" v-model="name"/>
                 </q-form>
             </q-card-section>
 
             <q-card-actions align="right">
-                <q-btn label="Сохранить" color="green" :loading="loading" @click="save" flat/>
-                <q-btn label="Отмена" color="red" :disable="loading" v-close-popup flat/>
+                <q-btn label="Сохранить" color="green" type="submit" form="serviceForm" flat/>
+                <q-btn label="Отмена" color="red" v-close-popup flat/>
             </q-card-actions>
+
+            <q-inner-loading :showing="loading">
+                <q-spinner-hourglass size="50px" color="primary"/>
+            </q-inner-loading>
         </q-card>
     </q-dialog>
 </template>
 
 <script>
 export default {
-    name: "OrganizationDialog",
+    name: "ServiceDialog",
     data() {
         return {
             loading: false,
@@ -27,23 +31,27 @@ export default {
     },
     methods: {
         show(id) {
+            this.$refs.dialog.show();
+
             this.id   = null;
             this.name = '';
 
             if (null !== id) {
+                this.loading = true;
+
                 this.$api({
-                    url: '/organizations/' + id,
+                    url: '/services/' + id,
                     method: 'get'
                 }).then(response => {
                     const {id, name} = response.data;
 
-                    this.id = id;
+                    this.id   = id;
                     this.name = name;
 
                     this.$refs.dialog.show();
+                }).finally(() => {
+                    this.loading = false;
                 });
-            } else {
-                this.$refs.dialog.show();
             }
         },
         save() {
@@ -53,7 +61,7 @@ export default {
                 name: this.name
             };
 
-            const url = ['/organizations'];
+            const url = ['/services'];
 
             if (this.id) {
                 url.push(this.id)

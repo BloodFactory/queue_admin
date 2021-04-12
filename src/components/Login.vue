@@ -10,7 +10,7 @@
                                 <h4 class="text-h5 text-white q-my-md">Вход</h4>
                             </q-card-section>
                             <q-card-section>
-                                <q-form class="q-px-sm q-pt-lg">
+                                <q-form id="loginForm" class="q-px-sm q-pt-lg" @submit.prevent="login">
                                     <q-input square v-model="username" label="Имя пользователя">
                                         <template v-slot:prepend>
                                             <q-icon name="mdi-account"/>
@@ -24,12 +24,14 @@
                                 </q-form>
                             </q-card-section>
                             <q-card-actions class="q-px-lg">
-                                <q-btn size="lg"
+                                <q-btn type="submit"
+                                       form="loginForm"
+                                       size="lg"
                                        color="purple-4"
                                        class="full-width text-white"
                                        label="Войти"
                                        :loading="loading"
-                                       @click="login"
+
                                        unelevated/>
                             </q-card-actions>
                         </q-card>

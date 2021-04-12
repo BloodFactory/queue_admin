@@ -1,6 +1,7 @@
 <template>
     <q-table :columns="columns"
              :data="data"
+             :loading="loading"
              title="Пользователи">
         <template v-slot:top-right>
             <q-btn color="primary"
@@ -11,13 +12,13 @@
         </template>
 
         <template v-slot:body="props">
-            <UsersTableRow :props="props"/>
+            <UsersTableRow :props="props" @openUserDialog="(id) => {$emit('openUserDialog', id)}"/>
         </template>
     </q-table>
 </template>
 
 <script>
-import UsersTableRow from "components/tables/UsersTableRow";
+import UsersTableRow from "pages/users/UsersTableRow";
 
 export default {
     name: "UsersTable",
@@ -26,6 +27,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             columns: [
                 {name: 'index', label: '#', field: 'index', sortable: false, align: 'right'},
                 {name: 'username', label: 'Имя пользователя', field: 'username', sortable: true, align: 'left'},
@@ -57,10 +59,7 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },
-        openUser(id) {
-            this.$emit('openUserDialog', id)
-        },
+        }
     }
 }
 </script>

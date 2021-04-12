@@ -1,14 +1,14 @@
 <template>
     <q-table :columns="columns"
              :data="data"
-             title="Услуги"
+             title="Организации"
              :loading="loading">
-        <template v-if="$can('add', 'Services')" v-slot:top-right>
+        <template v-if="$can('add', 'Organizations')" v-slot:top-right>
             <q-btn color="primary"
                    icon-right="mdi-plus"
                    label="Добавить"
                    no-caps
-                   @click="AddService"/>
+                   @click="addService"/>
         </template>
 
         <template v-slot:body-cell-index="cell">
@@ -19,20 +19,20 @@
 
         <template v-slot:body-cell-actions="cell">
             <q-td auto-width>
-                <q-btn v-if="$can('update', 'Services')"
+                <q-btn v-if="$can('update', 'Organizations')"
                        color="primary"
                        icon="mdi-pencil"
                        size="sm"
                        flat
                        round
-                       @click="openOrganization(cell.row.id)"/>
-                <q-btn v-if="$can('delete', 'Services')"
+                       @click="openService(cell.row.id)"/>
+                <q-btn v-if="$can('delete', 'Organizations')"
                        color="red"
                        icon="mdi-delete"
                        size="sm"
                        flat
                        round
-                       @click="deleteServices(cell.row.id)"/>
+                       @click="deleteService(cell.row.id)"/>
             </q-td>
         </template>
     </q-table>
@@ -40,7 +40,7 @@
 
 <script>
 export default {
-    name: "ServicesTable",
+    name: "ServiceTable",
     data() {
         return {
             loading: false,
@@ -53,7 +53,7 @@ export default {
         }
     },
     methods: {
-        AddService() {
+        addService() {
             this.$emit('openServiceDialog', null)
         },
         loadServices() {
@@ -74,7 +74,7 @@ export default {
                 this.loading = false;
             });
         },
-        deleteServices(id) {
+        deleteService(id) {
             this.$q.dialog({
                 title: 'Подтвердите действие',
                 message: 'Удалить выбранну запись',
@@ -94,12 +94,12 @@ export default {
                     url: '/services/' + id,
                     method: 'delete'
                 }).then(() => {
-                    this.loadServices()
+                    this.loadOrganizations()
                 });
             });
         },
-        openOrganization(id) {
-            this.$emit('openOrganizationDialog', id)
+        openService(id) {
+            this.$emit('openServiceDialog', id)
         }
     }
 }

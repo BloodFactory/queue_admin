@@ -4,6 +4,7 @@ import {api}    from 'boot/axios';
 import ability  from "src/helpers/ability";
 import security from "src/helpers/security";
 
+
 Vue.use(Vuex);
 
 export default function (/* { ssrContext } */) {
