@@ -38,7 +38,7 @@ export default {
             this.loading = true;
 
             this.$api({
-                url: '/organization/services',
+                url: '/organization_services',
                 method: 'get'
             }).then(response => {
                 this.organizationServices = response.data
@@ -54,7 +54,7 @@ export default {
                 persistent: true
             }).onOk(() => {
                 this.$api({
-                    url: '/organization/services/' + id,
+                    url: '/organization_services/' + id,
                     method: 'DELETE'
                 }).then(() => {
                     this.loadServicesList();
