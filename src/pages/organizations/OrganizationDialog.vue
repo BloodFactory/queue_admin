@@ -2,13 +2,13 @@
     <q-dialog ref="dialog" persistent>
         <q-card style="width: 400px">
             <q-card-section>
-                <q-form ref="form" @submit.prevent="save">
+                <q-form ref="form" id="organizationForm" @submit.prevent="save">
                     <q-input label="Название" v-model="name"/>
                 </q-form>
             </q-card-section>
 
             <q-card-actions align="right">
-                <q-btn label="Сохранить" color="green" type="submit" flat/>
+                <q-btn label="Сохранить" color="green" type="submit" form="organizationForm" flat/>
                 <q-btn label="Отмена" color="red" v-close-popup flat/>
             </q-card-actions>
 

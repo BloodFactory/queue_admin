@@ -76,8 +76,6 @@ export default {
                 this.$store.dispatch('initApp')
                     .then(() => {
                         this.loading = false;
-
-                        this.$router.push('/');
                     }).catch(error => {
                     this.loading = false;
 
