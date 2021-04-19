@@ -12,9 +12,9 @@
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="form.date" mask="DD.MM.YYYY">
+                                            <q-date v-model="form.date" mask="DD.MM.YYYY" :locale="calendarLocale" :first-day-of-week="1">
                                                 <div class="row items-center justify-end">
-                                                    <q-btn v-close-popup label="Close" color="primary" flat/>
+                                                    <q-btn v-close-popup label="Закрыть" color="primary" flat/>
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -117,6 +117,8 @@
 </template>
 
 <script>
+import {calendar} from 'src/helpers/locale';
+
 const getEmptyForm = () => {
     return {
         date: '',
@@ -164,7 +166,8 @@ export default {
                         return (!isNaN(v) && v > 0) || 'Укажите целое положительное число';
                     }
                 ]
-            }
+            },
+            calendarLocale: calendar
         }
     },
     methods: {

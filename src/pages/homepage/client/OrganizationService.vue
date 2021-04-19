@@ -20,55 +20,17 @@
                 <div v-show="expanded">
                     <q-card-section>
                         <div>
-                            <q-btn label="Открыть запись" color="primary" @click="$refs.appointmentDialog.show(null)"/>
+                            <q-btn label="Открыть запись" color="primary" @click="openAppointment(null)"/>
                         </div>
                     </q-card-section>
 
                     <q-card-section class="q-px-xl" v-if="null !== appointments">
                         <q-list v-if="appointments.length > 0">
-                            <template v-for="(appointment, index) in appointments">
-                                <q-item clickable>
-                                    <q-item-section avatar>
-                                        <q-icon name="mdi-calendar"/>
-                                    </q-item-section>
-
-                                    <q-item-section>
-                                        <q-item-label class="text-bold">{{ appointment.date }}</q-item-label>
-                                        <q-item-label caption lines="2">
-                                            Время приёма: <span class="text-weight-bold">{{ appointment.timeFrom }} - {{ appointment.timeTill }}</span>
-                                        </q-item-label>
-                                        <q-item-label v-if="appointment.needDinner" caption lines="2">
-                                            Перерыв на обед: <span class="text-weight-bold">{{ appointment.dinnerFrom }} - {{ appointment.dinnerTill }}</span>
-                                        </q-item-label>
-                                    </q-item-section>
-
-                                    <q-item-section side>
-                                        <div class="text-grey-8 q-gutter-xs">
-                                            <q-btn icon="mdi-dots-vertical" color="black" round flat>
-                                                <q-menu>
-                                                    <q-list style="min-width: 100px">
-                                                        <q-item clickable v-close-popup @click="$refs.appointmentDialog.show(appointment.id)">
-                                                            <q-item-section>Редактировать</q-item-section>
-                                                        </q-item>
-                                                        <q-item clickable v-close-popup>
-                                                            <q-item-section>Удалить</q-item-section>
-                                                        </q-item>
-                                                        <q-separator/>
-                                                        <q-item clickable v-close-popup>
-                                                            <q-tooltip anchor="top middle">
-                                                                Пользователи больше не смогут записываться в этот день. Старые заявки на приём сохранятся.
-                                                            </q-tooltip>
-                                                            <q-item-section>Закрыть запись</q-item-section>
-                                                        </q-item>
-                                                    </q-list>
-                                                </q-menu>
-                                            </q-btn>
-                                        </div>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-separator v-if="index < appointments.length - 1" inset="item"/>
-                            </template>
+                            <AppointmentItem v-for="(appointment, index) in appointments"
+                                             :key="index"
+                                             :appointment="appointment"
+                                             :separator="index < appointments.length - 1"
+                                             @openAppointment="openAppointment"/>
                         </q-list>
 
                         <div v-else>
@@ -88,12 +50,14 @@
 
 <script>
 import AppointmentDialog from "./AppointmentDialog";
+import AppointmentItem   from "./AppointmentItem";
 
 export default {
     name: "OrganizationService",
     props: ['organizationService'],
     components: {
-        AppointmentDialog
+        AppointmentDialog,
+        AppointmentItem
     },
     data() {
         return {
@@ -130,6 +94,9 @@ export default {
                 return Promise.resolve();
             });
         },
+        openAppointment(appointmentId) {
+            this.$refs.appointmentDialog.show(appointmentId)
+        }
     }
 }
 </script>
