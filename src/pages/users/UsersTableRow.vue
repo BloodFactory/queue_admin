@@ -60,7 +60,7 @@ export default {
         deleteUser(id) {
             this.$q.dialog({
                 title: 'Подтвердите действие',
-                message: 'Удалить выбранну запись',
+                message: 'Удалить выбранную запись',
                 ok: {
                     flat: true,
                     color: 'green',

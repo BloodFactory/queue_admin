@@ -33,7 +33,7 @@ export default {
         save() {
             if (this.$refs.form.validate()) {
                 this.$api({
-                    url: '/organization/services',
+                    url: '/organization_services',
                     method: 'post',
                     data: {
                         service: this.service.value
