@@ -21,13 +21,13 @@
 
                 <q-item-section side>
                     <div class="text-grey-8 q-gutter-xs">
-                        <q-btn icon="mdi-dots-vertical" color="black" round flat>
+                        <q-btn icon="mdi-dots-vertical" color="black" round flat :loading="loading">
                             <q-menu>
                                 <q-list style="min-width: 100px">
-                                    <q-item clickable v-close-popup @click="$emit('openAppointment', appointment.id)">
+                                    <q-item :disable="hasRegistrations" clickable v-close-popup @click="$emit('openAppointment', appointment.id)">
                                         <q-item-section>Редактировать</q-item-section>
                                     </q-item>
-                                    <q-item clickable v-close-popup>
+                                    <q-item :disable="hasRegistrations" clickable v-close-popup @click="deleteAppointment">
                                         <q-item-section>Удалить</q-item-section>
                                     </q-item>
                                     <q-separator/>
@@ -44,8 +44,11 @@
                 </q-item-section>
             </template>
 
-            <div style="margin-left: 72px;" class="q-pb-lg">
-                <q-table :columns="registrationsColumns" :data="registrations" no-data-label="Нет записей">
+            <div style="margin-left: 72px;" class="q-pb-lg q-pt-lg">
+                <q-table :columns="registrationsColumns"
+                         title="Записи кандидатов"
+                         :data="registrations"
+                         no-data-label="Нет записей">
                     <template v-slot:body="props">
                         <RegistrationItem :props="props"/>
                     </template>
@@ -71,6 +74,7 @@ export default {
     ],
     data() {
         return {
+            loading: false,
             registrationsExpanded: false,
             registrationsColumns: [
                 {
@@ -122,17 +126,51 @@ export default {
     },
     computed: {
         registrations() {
-            console.log(this.appointment);
-
             return this.appointment.registrations;
+        },
+        hasRegistrations() {
+            return this.appointment.hasOwnProperty('registrations') && this.appointment.registrations.length > 0;
         }
     },
     methods: {
         unprocessedRequests(appointment) {
             return appointment.registrations ? appointment.registrations.filter((item) => {
-                console.log(item)
                 return item.status === null;
             }).length : 0;
+        },
+        deleteAppointment() {
+            if (this.loading) return;
+
+            this.$q.dialog({
+                title: 'Подтвердите действие',
+                message: 'Удалить выбраную запись?',
+                cancel: 'Отмена',
+                persistent: true
+            }).onOk(() => {
+                this.loading = true;
+
+                this.$api({
+                    url: '/appointments/' + this.appointment.id,
+                    method: 'delete'
+                }).then(() => {
+                    this.$q.dialog({
+                        title: 'Успех',
+                        message: 'Заявка успешно удалена',
+                        persistent: true,
+                        cancel: false,
+                    }).onOk(() => {
+                        this.$emit('deleteAppointment');
+                    });
+                }).catch(error => {
+                    this.$q.notify({
+                        message: error.response.data,
+                        type: 'negative',
+                        position: 'top'
+                    })
+                }).finally(() => {
+                    this.loading = false;
+                });
+            });
         }
     }
 }

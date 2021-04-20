@@ -3,7 +3,9 @@
         <q-card style="width: 400px">
             <q-card-section>
                 <q-form ref="form" id="organizationForm" @submit.prevent="save">
-                    <q-input label="Название" v-model="name"/>
+                    <q-input label="Название" v-model="name" :rules="rules.name"/>
+
+                    <q-input label="Часовой пояс (GMT)" v-model="timezone" type="number" :rules="rules.timeZone"/>
                 </q-form>
             </q-card-section>
 
@@ -26,15 +28,30 @@ export default {
         return {
             loading: false,
             id: null,
-            name: ''
+            name: '',
+            timezone: 3,
+            rules: {
+                name: [
+                    v => !!v || 'Заполните поле'
+                ],
+                timeZone: [
+                    v => {
+                        if (isNaN(v)) return 'Введите число';
+                        v = parseInt(v);
+                        if (v < -12 || v > 12) return 'Значение должно быть в диапазоне от -12 до +12 ';
+                        return true;
+                    }
+                ]
+            }
         }
     },
     methods: {
         show(id) {
             this.$refs.dialog.show();
 
-            this.id   = null;
-            this.name = '';
+            this.id       = null;
+            this.name     = '';
+            this.timezone = 3;
 
             if (null !== id) {
                 this.loading = true;
@@ -43,10 +60,11 @@ export default {
                     url: '/organizations/' + id,
                     method: 'get'
                 }).then(response => {
-                    const {id, name} = response.data;
+                    const {id, name, timezone} = response.data;
 
-                    this.id   = id;
-                    this.name = name;
+                    this.id       = id;
+                    this.name     = name;
+                    this.timezone = timezone;
 
                     this.$refs.dialog.show();
                 }).finally(() => {
@@ -55,10 +73,13 @@ export default {
             }
         },
         save() {
+            if (this.loading || !this.$refs.form.validate()) return;
+
             this.loading = true;
 
             const request = {
-                name: this.name
+                name: this.name,
+                timezone: parseInt(this.timezone)
             };
 
             const url = ['/organizations'];
