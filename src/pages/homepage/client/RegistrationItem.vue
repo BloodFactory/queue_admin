@@ -1,5 +1,5 @@
 <template>
-    <q-tr :props="props" :class="rowClass" style="position: relative">
+    <q-tr :props="props" style="position: relative">
         <q-td>{{ props['row']['time'] }}</q-td>
         <q-td>{{ props['row']['person']['lastName'] }}</q-td>
         <q-td>{{ props['row']['person']['firstName'] }}</q-td>
@@ -8,24 +8,14 @@
         <q-td>{{ props['row']['person']['phone'] }}</q-td>
         <q-td>{{ props['row']['person']['email'] }}</q-td>
         <q-td style="text-align: right">
-            <q-btn icon="mdi-check"
+            <q-btn icon="mdi-delete"
                    size="sm"
                    padding="xs"
-                   :class="true !== props['row']['status'] ? 'text-black': 'text-white'"
-                   :color="(props['row']['status'] === true) ? 'green' : 'standard'"
+                   class="text-black"
                    :loading="loading"
                    unelevated
                    rounded
-                   @click="setStatus(true)"/>
-            <q-btn icon="mdi-cancel"
-                   size="sm"
-                   padding="xs"
-                   :class="false !== props['row']['status'] ? 'text-black': 'text-white'"
-                   :color="(props['row']['status'] === false) ? 'red' : 'standard'"
-                   :loading="loading"
-                   unelevated
-                   rounded
-                   @click="setStatus(false)"/>
+                   @click="remove"/>
         </q-td>
     </q-tr>
 </template>
@@ -39,35 +29,33 @@ export default {
             loading: false
         }
     },
-    computed: {
-        rowClass() {
-            if (false === this.props['row']['status']) return 'bg-red-2';
-            if (true === this.props['row']['status']) return 'bg-green-2';
-        }
-    },
     methods: {
-        setStatus(status) {
-            if (this.loading || status === this.props['row']['status']) return;
+        remove() {
+            if (this.loading) return;
 
-            this.loading = true;
+            this.$q.dialog({
+                title: 'Подтвердите действие',
+                message: 'Удалить выбраную запись?',
+                cancel: 'Отмена',
+                persistent: true
+            }).onOk(() => {
+                this.loading = true;
 
-            this.$api({
-                url: '/requests/' + this.props['row']['id'] + '/status',
-                method: 'post',
-                data: {
-                    status
-                }
-            }).then(() => {
-                this.props['row']['status'] = status;
-            }).catch((error) => {
-                this.$q.notify({
-                    message: error.response.data,
-                    type: 'negative',
-                    position: 'top'
-                })
-            }).finally(() => {
-                this.loading = false;
-            });
+                this.$api({
+                    url: '/requests/' + this.props['row']['id'],
+                    method: 'delete'
+                }).then(() => {
+                    this.$emit('delete');
+                }).catch((error) => {
+                    this.$q.notify({
+                        message: error.response.data,
+                        type: 'negative',
+                        position: 'top'
+                    })
+                }).finally(() => {
+                    this.loading = false;
+                });
+            })
         }
     }
 }

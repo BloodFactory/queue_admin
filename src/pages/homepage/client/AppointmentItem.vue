@@ -14,9 +14,6 @@
                     <q-item-label v-if="appointment.needDinner" caption lines="2">
                         Перерыв на обед: <span class="text-weight-bold">{{ appointment.dinnerFrom }} - {{ appointment.dinnerTill }}</span>
                     </q-item-label>
-                    <q-item-label v-if="appointment.needDinner" caption lines="2">
-                        Необработанных заявок: <span class="text-weight-bold">{{ unprocessedRequests(appointment) }}</span>
-                    </q-item-label>
                 </q-item-section>
 
                 <q-item-section side>
@@ -50,7 +47,7 @@
                          :data="registrations"
                          no-data-label="Нет записей">
                     <template v-slot:body="props">
-                        <RegistrationItem :props="props"/>
+                        <RegistrationItem :props="props" @delete="$emit('deleteRegistration')"/>
                     </template>
                 </q-table>
             </div>
@@ -118,7 +115,6 @@ export default {
                 },
                 {
                     name: 'confirm',
-                    label: 'Подтверждение заявки',
                     headerStyle: 'width: 165px'
                 }
             ]
@@ -133,11 +129,6 @@ export default {
         }
     },
     methods: {
-        unprocessedRequests(appointment) {
-            return appointment.registrations ? appointment.registrations.filter((item) => {
-                return item.status === null;
-            }).length : 0;
-        },
         deleteAppointment() {
             if (this.loading) return;
 

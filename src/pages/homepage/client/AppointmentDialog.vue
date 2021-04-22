@@ -31,7 +31,7 @@
                                 <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-time v-model="form.timeFrom">
+                                            <q-time v-model="form.timeFrom" format24h>
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat/>
                                                 </div>
@@ -46,7 +46,7 @@
                                 <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-time v-model="form.timeTill">
+                                            <q-time v-model="form.timeTill" format24h>
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat/>
                                                 </div>

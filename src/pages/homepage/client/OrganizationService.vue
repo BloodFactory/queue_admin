@@ -31,7 +31,8 @@
                                              :appointment="appointment"
                                              :separator="index < appointments.length - 1"
                                              @openAppointment="openAppointment"
-                                             @deleteAppointment="loadAppointments"/>
+                                             @deleteAppointment="loadAppointments"
+                                             @deleteRegistration="loadAppointments"/>
                         </q-list>
 
                         <div v-else>
