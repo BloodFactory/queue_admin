@@ -1,8 +1,13 @@
 <template>
-    <q-table :columns="columns"
+    <q-table ref="table"
+             :columns="columns"
              :data="data"
              title="Организации"
-             :loading="loading">
+             :loading="loading"
+             rows-per-page-label="Записей на странице:"
+             :pagination-label="paginationLabel"
+             :pagination.sync="pagination"
+             @request="fetchList">
         <template v-if="$can('add', 'Organizations')" v-slot:top-right>
             <q-btn color="primary"
                    icon-right="mdi-plus"
@@ -46,33 +51,24 @@ export default {
             loading: false,
             columns: [
                 {name: 'index', label: '#', field: 'index', sortable: false, align: 'right'},
-                {name: 'name', label: 'Название', field: 'name', sortable: true, align: 'left'},
+                {name: 'name', label: 'Название', field: 'name', sortable: false, align: 'left'},
                 {name: 'actions', label: '', field: 'actions'}
             ],
-            data: []
+            data: [],
+            pagination: {
+                rowsNumber: 0
+            }
         }
     },
     methods: {
+        paginationLabel(firstRowIndex, endRowIndex, totalRowsNumber) {
+            return `${firstRowIndex} - ${endRowIndex} из ${totalRowsNumber}`;
+        },
         addOrganization() {
             this.$emit('openOrganizationDialog', null)
         },
         loadOrganizations() {
-            this.loading = true;
-
-            this.$api({
-                url: 'organizations',
-                method: 'get'
-            }).then(response => {
-                this.data = response.data
-            }).catch(error => {
-                this.$q.notify({
-                    message: 'Не удалось загрузить данные',
-                    type: 'negative',
-                    position: 'top'
-                });
-            }).finally(() => {
-                this.loading = false;
-            });
+            this.$refs.table.requestServerInteraction();
         },
         deleteOrganization(id) {
             this.$q.dialog({
@@ -100,6 +96,35 @@ export default {
         },
         openOrganization(id) {
             this.$emit('openOrganizationDialog', id)
+        },
+        fetchList({filter, pagination}) {
+            this.loading = true;
+
+            const params = {};
+
+            if (filter) params.filter = filter;
+
+            params.page  = pagination.page;
+            params.limit = pagination.rowsPerPage;
+
+            this.$api({
+                url: 'organizations',
+                method: 'get',
+                params
+            }).then(response => {
+                pagination.rowsNumber = response.data.count;
+
+                this.data       = response.data.data;
+                this.pagination = pagination;
+            }).catch(error => {
+                this.$q.notify({
+                    message: 'Не удалось загрузить данные',
+                    type: 'negative',
+                    position: 'top'
+                });
+            }).finally(() => {
+                this.loading = false;
+            });
         }
     }
 }

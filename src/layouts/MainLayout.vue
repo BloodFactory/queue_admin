@@ -11,7 +11,7 @@
                              v-if="page.hasOwnProperty('label') && $can('open', page.route)"
                              :to="{name: page.route}"
                              v-slot="{ href, route, navigate, isActive, isExactActive }">
-                    <q-btn :label="page.label" @click="navigate" stretch flat/>
+                    <q-btn :label="page.label" @click="navigate" stretch flat class="q-border"/>
                 </router-link>
 
                 <q-space/>
@@ -63,10 +63,12 @@ export default {
     },
     methods: {
         logout() {
-            this.$store.dispatch('logout').then(() => {
-                this.$router.push({name: 'Login'});
-            }).catch(error => {
-                console.log(error);
+            this.$store.dispatch('logout').catch(error => {
+                this.$q.notify({
+                    message: error.request.data,
+                    type: 'negative',
+                    position: 'top'
+                })
             });
         }
     }

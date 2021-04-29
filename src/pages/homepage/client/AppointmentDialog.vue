@@ -65,7 +65,7 @@
                                 <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-time v-model="form.dinnerFrom">
+                                            <q-time v-model="form.dinnerFrom" format24h>
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat/>
                                                 </div>
@@ -80,7 +80,7 @@
                                 <template v-slot:append>
                                     <q-icon name="access_time" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-time v-model="form.dinnerTill">
+                                            <q-time v-model="form.dinnerTill" format24h>
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat/>
                                                 </div>
@@ -98,7 +98,7 @@
                         </div>
 
                         <div class="col">
-                            <q-input label="Количество человек" v-model="form.persons" type="number" :rules="rules.persons"/>
+                            <q-input label="Количество человек (на один приём)" v-model="form.persons" type="number" :rules="rules.persons"/>
                         </div>
                     </div>
                 </q-form>

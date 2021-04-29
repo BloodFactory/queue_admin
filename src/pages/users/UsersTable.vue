@@ -1,8 +1,13 @@
 <template>
-    <q-table :columns="columns"
+    <q-table ref="table"
+             :columns="columns"
              :data="data"
              :loading="loading"
-             title="Пользователи">
+             title="Пользователи"
+             rows-per-page-label="Записей на странице:"
+             :pagination-label="paginationLabel"
+             :pagination.sync="pagination"
+             @request="fetchList">
         <template v-slot:top-right>
             <q-btn color="primary"
                    icon-right="mdi-plus"
@@ -35,7 +40,10 @@ export default {
                 {name: 'organization', label: 'Организация', field: 'organization', sortable: true, align: 'left'},
                 {name: 'actions', label: 'Действия', field: 'actions', align: 'left'}
             ],
-            data: []
+            data: [],
+            pagination: {
+                rowsNumber: 0
+            }
         }
     },
     methods: {
@@ -43,13 +51,30 @@ export default {
             this.$emit('openUserDialog', null)
         },
         loadUsers() {
+            this.$refs.table.requestServerInteraction();
+        },
+        paginationLabel(firstRowIndex, endRowIndex, totalRowsNumber) {
+            return `${firstRowIndex} - ${endRowIndex} из ${totalRowsNumber}`;
+        },
+        fetchList({filter, pagination}) {
             this.loading = true;
 
+            const params = {};
+
+            if (filter) params.filter = filter;
+
+            params.page  = pagination.page;
+            params.limit = pagination.rowsPerPage;
+
             this.$api({
-                url: '/users',
-                method: 'get'
+                url: 'users',
+                method: 'get',
+                params
             }).then(response => {
-                this.data = response.data
+                pagination.rowsNumber = response.data.count;
+
+                this.data       = response.data.data;
+                this.pagination = pagination;
             }).catch(error => {
                 this.$q.notify({
                     message: 'Не удалось загрузить данные',

@@ -5,7 +5,7 @@
                 <q-form ref="form" id="organizationForm" @submit.prevent="save">
                     <q-input label="Название" v-model="name" :rules="rules.name"/>
 
-                    <q-input label="Часовой пояс (GMT)" v-model="timezone" type="number" :rules="rules.timeZone"/>
+                    <q-input label="Часовой пояс (UTC)" v-model="timezone" type="number" :rules="rules.timeZone"/>
                 </q-form>
             </q-card-section>
 
