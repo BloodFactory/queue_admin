@@ -1,6 +1,6 @@
 <template>
     <q-layout view="lHh Lpr lFf">
-        <q-header>
+        <q-header :class="$q.dark.isActive && 'bg-black'">
             <q-toolbar>
                 <q-toolbar-title v-if="user.hasOwnProperty('organization')">
                     {{ user.organization.name }}
@@ -15,7 +15,11 @@
                 </router-link>
 
                 <q-space/>
-                <q-btn label="Выход" flat stretch @click="logout"/>
+                <q-btn label="Учётная запись" flat stretch>
+                    <q-menu>
+                        <Account/>
+                    </q-menu>
+                </q-btn>
             </q-toolbar>
         </q-header>
 
@@ -28,9 +32,13 @@
 </template>
 
 <script>
+import Account from "./Account";
 
 export default {
     name: 'MainLayout',
+    components: {
+        Account
+    },
     data() {
         return {
             pages: [
@@ -59,17 +67,6 @@ export default {
     computed: {
         user() {
             return this.$store.getters['getUser'];
-        }
-    },
-    methods: {
-        logout() {
-            this.$store.dispatch('logout').catch(error => {
-                this.$q.notify({
-                    message: error.request.data,
-                    type: 'negative',
-                    position: 'top'
-                })
-            });
         }
     }
 }

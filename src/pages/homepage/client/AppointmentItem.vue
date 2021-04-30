@@ -14,6 +14,12 @@
                     <q-item-label v-if="appointment.needDinner" caption lines="2">
                         Перерыв на обед: <span class="text-weight-bold">{{ appointment.dinnerFrom }} - {{ appointment.dinnerTill }}</span>
                     </q-item-label>
+                    <q-item-label caption lines="2">
+                        Длительность приёма: <span class="text-weight-bold">{{ appointment.duration }}</span>
+                    </q-item-label>
+                    <q-item-label caption lines="2">
+                        Количество вакантных мест за один приём: <span class="text-weight-bold">{{ appointment.persons }}</span>
+                    </q-item-label>
                 </q-item-section>
 
                 <q-item-section side>

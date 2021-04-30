@@ -18,7 +18,6 @@ export default async function ({store}) {
     });
 
     Router.onError(error => {
-        console.log(error);
     })
 
     return Router;

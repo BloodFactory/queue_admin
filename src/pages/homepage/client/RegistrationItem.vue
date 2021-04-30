@@ -11,7 +11,7 @@
             <q-btn icon="mdi-delete"
                    size="sm"
                    padding="xs"
-                   class="text-black"
+                   class="text-red-13"
                    :loading="loading"
                    unelevated
                    rounded

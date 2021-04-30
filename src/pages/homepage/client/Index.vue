@@ -1,6 +1,6 @@
 <template>
-    <q-page class="bg-grey-4">
-        <q-toolbar class="bg-white shadow-1 q-py-md">
+    <q-page :class="darkMode || 'bg-grey-4'">
+        <q-toolbar :class="($q.dark.isActive ? 'bg-cyan-10' : 'bg-white') + ' shadow-1 q-py-md'">
             <div class="text-h6">Удалённая запись на приём</div>
             <q-space/>
             <q-btn label="Добавить" color="primary" class="no-border-radius" @click="$refs.serviceDialog.show(null)" unelevated/>
@@ -31,6 +31,11 @@ export default {
             organizationServices: [],
             showOld: false,
             loading: false
+        }
+    },
+    computed: {
+        darkMode() {
+            return this.$store.getters['getDarkMode'];
         }
     },
     methods: {

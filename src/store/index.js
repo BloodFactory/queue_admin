@@ -3,6 +3,7 @@ import Vuex     from 'vuex';
 import {api}    from 'boot/axios';
 import ability  from "src/helpers/ability";
 import security from "src/helpers/security";
+import {Dark}   from 'quasar';
 
 
 Vue.use(Vuex);
@@ -13,12 +14,16 @@ export default function (/* { ssrContext } */) {
 
         state: {
             isAuthorized: false,
+            darkMode: false,
             user: null
         },
 
         getters: {
             getIsAuthorized(state) {
                 return state.isAuthorized;
+            },
+            getDarkMode(state) {
+                return state.darkMode;
             },
             getUser(state) {
                 return state.user;
@@ -28,6 +33,10 @@ export default function (/* { ssrContext } */) {
         mutations: {
             setIsAuthorized(state, isAuthorized) {
                 state.isAuthorized = isAuthorized;
+            },
+            setDarkMode(state, darkMode) {
+                Dark.set(darkMode);
+                state.darkMode = darkMode;
             },
             setUser(state, user) {
                 state.user = user;

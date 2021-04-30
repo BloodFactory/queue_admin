@@ -1,5 +1,4 @@
-<template>
-</template>
+<template></template>
 
 <script>
 import {QSpinnerGears as Spinner} from 'quasar';

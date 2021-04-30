@@ -42,10 +42,6 @@ export default {
                     this.isLoading = false;
                 }
             });
-    },
-    updated() {
-        console.log(this.$route)
-        console.log(this.$ability.can('open', this.$route.name))
     }
 }
 </script>
