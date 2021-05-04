@@ -26,7 +26,6 @@ export default {
     computed: {
         userName() {
             const user = this.$store.getters['getUser'];
-            console.log(user);
             return [
                 user.lastName,
                 user.firstName
@@ -34,10 +33,28 @@ export default {
         },
         darkMode: {
             get() {
-                return this.$store.getters['getDarkMode'];
+                return this.$q.dark.isActive;
             },
             set(darkMode) {
-                this.$store.commit('setDarkMode', darkMode);
+                this.$q.loading.show();
+
+                this.$api({
+                    url: '/settings/darkMode',
+                    method: 'post',
+                    data: {
+                        darkMode
+                    }
+                }).then(response => {
+                    this.$store.commit('setDarkMode', darkMode);
+                }).catch(error => {
+                    this.$q.notify({
+                        message: error.response.data,
+                        type: 'negative',
+                        position: 'top'
+                    })
+                }).finally(() => {
+                    this.$q.loading.hide();
+                });
             }
         }
     },

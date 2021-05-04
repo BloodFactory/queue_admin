@@ -1,5 +1,5 @@
 <template>
-    <q-page class="bg-grey-4" padding>
+    <q-page padding>
         <ServicesTable ref="servicesTable"
                        @openServiceDialog="openServiceDialog"/>
         <ServiceDialog ref="serviceDialog"
@@ -20,6 +20,11 @@ export default {
     methods: {
         openServiceDialog(id) {
             this.$refs.serviceDialog.show(id)
+        }
+    },
+    computed: {
+        darkMode() {
+            return this.$store.getters['getDarkMode'];
         }
     },
     mounted() {

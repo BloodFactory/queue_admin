@@ -23,7 +23,7 @@
             </q-toolbar>
         </q-header>
 
-        <q-page-container>
+        <q-page-container :class="darkMode && 'bg-grey-9' || 'bg-grey-4'">
             <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
                 <router-view/>
             </transition>
@@ -67,6 +67,9 @@ export default {
     computed: {
         user() {
             return this.$store.getters['getUser'];
+        },
+        darkMode() {
+            return this.$q.dark.isActive;
         }
     }
 }

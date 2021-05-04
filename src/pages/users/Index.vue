@@ -1,5 +1,5 @@
 <template>
-    <q-page class="bg-grey-4" padding>
+    <q-page padding>
         <UsersTable ref="usersTable"
                     @openUserDialog="openUserDialog"/>
         <UserDialog ref="userDialog" @save="$refs.usersTable.loadUsers()"/>

@@ -56,6 +56,12 @@ export default function (/* { ssrContext } */) {
 
                     commit('setIsAuthorized', true);
 
+                    if (response.data.settings && response.data.settings.darkMode) {
+                        Dark.set(true);
+                    } else {
+                        Dark.set(false);
+                    }
+
                     return Promise.resolve();
                 }).catch(error => {
                     return Promise.reject(error);

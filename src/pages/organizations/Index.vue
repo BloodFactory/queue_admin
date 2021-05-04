@@ -1,5 +1,5 @@
 <template>
-    <q-page class="bg-grey-4" padding>
+    <q-page padding>
         <OrganizationsTable ref="organizationsTable"
                             @openOrganizationDialog="openOrganizationDialog"/>
         <OrganizationDialog ref="organizationDialog"

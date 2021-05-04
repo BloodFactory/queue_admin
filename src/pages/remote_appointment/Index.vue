@@ -1,5 +1,5 @@
 <template>
-    <q-page class="bg-grey-4" padding>
+    <q-page padding>
         <ServicesTable ref="servicesTable"
                        @openServiceDialog="openServiceDialog"/>
         <ServiceDialog ref="serviceDialog"

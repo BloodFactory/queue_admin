@@ -1,5 +1,5 @@
 <template>
-    <q-page :class="darkMode || 'bg-grey-4'">
+    <q-page padding>
         <q-toolbar :class="($q.dark.isActive ? 'bg-cyan-10' : 'bg-white') + ' shadow-1 q-py-md'">
             <div class="text-h6">Удалённая запись на приём</div>
             <q-space/>
