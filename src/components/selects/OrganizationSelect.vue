@@ -1,5 +1,5 @@
 <template>
-    <q-select label="Организация"
+    <q-select :label="label"
               v-model="localValue"
               :options="options"
               :loading="loading"
@@ -12,10 +12,17 @@
 export default {
     name: "OrganizationSelect",
     props: {
+        label: {
+            type: String,
+            default: 'Оргнанизация'
+        },
         value: {},
         required: {
             type: Boolean,
             default: false
+        },
+        filter: {
+            type: Function
         }
     },
     data() {
@@ -43,7 +50,13 @@ export default {
                 method: 'get'
             }).then(response => {
                 update(() => {
-                    this.options = response.data;
+                    let data = response.data;
+
+                    if (null !== this.filter && typeof this.filter === 'function') {
+                        data = data.filter(this.filter);
+                    }
+
+                    this.options = data;
                 });
             }).catch(error => {
                 this.$q.notify({

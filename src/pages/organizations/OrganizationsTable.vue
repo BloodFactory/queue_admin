@@ -1,74 +1,133 @@
 <template>
-    <q-table ref="table"
-             :columns="columns"
-             :data="data"
-             title="Организации"
-             :loading="loading"
-             rows-per-page-label="Записей на странице:"
-             :pagination-label="paginationLabel"
-             :pagination.sync="pagination"
-             @request="fetchList">
-        <template v-if="$can('add', 'Organizations')" v-slot:top-right>
-            <q-btn color="primary"
-                   icon-right="mdi-plus"
-                   label="Добавить"
-                   no-caps
-                   @click="addOrganization"/>
-        </template>
+    <q-card>
+        <q-card-section>
+            <div class="flex justify-between">
+                <q-btn color="primary"
+                       icon-right="mdi-plus"
+                       label="Добавить"
+                       no-caps
+                       @click="addOrganization"/>
+                <div class="flex flex-center">
+                    <span class="q-mr-sm text-caption">Записей на странице:</span>
+                    <q-select :value="limit" :options="itemsPerPages" dense borderless @input="changeLimit"/>
+                </div>
+            </div>
+        </q-card-section>
 
-        <template v-slot:body-cell-index="cell">
-            <q-td auto-width>
-                {{ cell.value }}
-            </q-td>
-        </template>
+        <q-card-section>
+            <q-list>
+                <OrganizationItem v-for="organization in data"
+                                  :key="organization.id"
+                                  :item="organization"
+                                  @openOrganization="openOrganization"
+                                  @deleteOrganization="deleteOrganization"/>
+                <!--                <q-item v-for="organization in data">-->
+                <!--                    <q-item-section style="width: 40px" side>-->
+                <!--                        <q-btn v-if="organization.branches" icon="mdi-plus" color="purple" size="xs" round unelevated/>-->
+                <!--                    </q-item-section>-->
+                <!--                    <q-item-section side>-->
+                <!--                        {{ organization.index }}-->
+                <!--                    </q-item-section>-->
+                <!--                    <q-item-section>-->
+                <!--                        <q-item-label>-->
+                <!--                            {{ organization.name }}-->
+                <!--                        </q-item-label>-->
+                <!--                    </q-item-section>-->
 
-        <template v-slot:body-cell-actions="cell">
-            <q-td auto-width>
-                <q-btn v-if="$can('update', 'Organizations')"
-                       color="primary"
-                       icon="mdi-pencil"
-                       size="sm"
-                       flat
-                       round
-                       @click="openOrganization(cell.row.id)"/>
-                <q-btn v-if="$can('delete', 'Organizations')"
-                       color="red"
-                       icon="mdi-delete"
-                       size="sm"
-                       flat
-                       round
-                       @click="deleteOrganization(cell.row.id)"/>
-            </q-td>
-        </template>
-    </q-table>
+                <!--                    <q-item-section top side>-->
+                <!--                        <div class="text-grey-8 q-gutter-xs">-->
+                <!--                            <q-btn v-if="$can('update', 'Organizations')"-->
+                <!--                                   color="primary"-->
+                <!--                                   icon="mdi-pencil"-->
+                <!--                                   size="sm"-->
+                <!--                                   flat-->
+                <!--                                   round-->
+                <!--                                   @click="openOrganization(organization.id)"/>-->
+                <!--                            <q-btn v-if="$can('delete', 'Organizations')"-->
+                <!--                                   color="red"-->
+                <!--                                   icon="mdi-delete"-->
+                <!--                                   size="sm"-->
+                <!--                                   flat-->
+                <!--                                   round-->
+                <!--                                   @click="deleteOrganization(organization.id)"/>-->
+                <!--                        </div>-->
+                <!--                    </q-item-section>-->
+                <!--                </q-item>-->
+            </q-list>
+
+            <div v-if="pages >1" class="q-py-lg flex justify-end">
+                <q-pagination :value="page"
+                              :max="pages"
+                              :max-pages="6"
+                              direction-links
+                              boundary-links
+                              icon-first="skip_previous"
+                              icon-last="skip_next"
+                              icon-prev="fast_rewind"
+                              icon-next="fast_forward"
+                              @input="changePage"/>
+            </div>
+        </q-card-section>
+    </q-card>
 </template>
 
 <script>
+import OrganizationItem from "./OrganizationItem";
+
 export default {
     name: "OrganizationsTable",
+    components: {
+        OrganizationItem
+    },
     data() {
         return {
-            loading: false,
             columns: [
                 {name: 'index', label: '#', field: 'index', sortable: false, align: 'right'},
                 {name: 'name', label: 'Название', field: 'name', sortable: false, align: 'left'},
                 {name: 'actions', label: '', field: 'actions'}
             ],
             data: [],
-            pagination: {
-                rowsNumber: 0
-            }
+            page: 1,
+            pages: 0,
+            limit: 5,
+            itemsPerPages: [
+                5,
+                10,
+                15,
+                30
+            ]
         }
     },
     methods: {
-        paginationLabel(firstRowIndex, endRowIndex, totalRowsNumber) {
-            return `${firstRowIndex} - ${endRowIndex} из ${totalRowsNumber}`;
-        },
         addOrganization() {
             this.$emit('openOrganizationDialog', null)
         },
-        loadOrganizations() {
-            this.$refs.table.requestServerInteraction();
+        fetchList(props) {
+            this.$q.loading.show();
+            const params = {};
+
+            params.page  = this.page;
+            params.limit = this.limit;
+
+            return this.$api({
+                url: 'organizations',
+                method: 'get',
+                params
+            }).then(response => {
+                this.data  = response.data.data;
+                this.pages = Math.ceil(response.data.count / this.limit);
+            }).catch(error => {
+                this.$q.notify({
+                    message: 'Не удалось загрузить данные',
+                    type: 'negative',
+                    position: 'top'
+                });
+            }).finally(() => {
+                this.$q.loading.hide();
+            });
+        },
+        openOrganization(id) {
+            this.$emit('openOrganizationDialog', id)
         },
         deleteOrganization(id) {
             this.$q.dialog({
@@ -86,45 +145,32 @@ export default {
                 },
                 persistent: true
             }).onOk(() => {
+                const items = this.data.length;
+
                 this.$api({
                     url: '/organizations/' + id,
                     method: 'delete'
                 }).then(() => {
-                    this.loadOrganizations()
+                    if (1 === items && this.page > 1) {
+                        this.page = this.page - 1;
+                    }
+                    this.fetchList()
                 });
             });
         },
-        openOrganization(id) {
-            this.$emit('openOrganizationDialog', id)
+        changePage(page) {
+            if (page === this.page) return;
+
+            this.page = page;
+
+            this.fetchList({page});
         },
-        fetchList({filter, pagination}) {
-            this.loading = true;
+        changeLimit(limit) {
+            if (limit === this.limit) return;
 
-            const params = {};
+            this.limit = limit;
 
-            if (filter) params.filter = filter;
-
-            params.page  = pagination.page;
-            params.limit = pagination.rowsPerPage;
-
-            this.$api({
-                url: 'organizations',
-                method: 'get',
-                params
-            }).then(response => {
-                pagination.rowsNumber = response.data.count;
-
-                this.data       = response.data.data;
-                this.pagination = pagination;
-            }).catch(error => {
-                this.$q.notify({
-                    message: 'Не удалось загрузить данные',
-                    type: 'negative',
-                    position: 'top'
-                });
-            }).finally(() => {
-                this.loading = false;
-            });
+            this.fetchList({limit});
         }
     }
 }

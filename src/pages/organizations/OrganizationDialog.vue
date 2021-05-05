@@ -1,11 +1,13 @@
 <template>
     <q-dialog ref="dialog" persistent>
-        <q-card style="width: 400px">
+        <q-card style="width: 450px">
             <q-card-section>
                 <q-form ref="form" id="organizationForm" @submit.prevent="save">
                     <q-input label="Название" v-model="name" :rules="rules.name"/>
 
-                    <q-input label="Часовой пояс (UTC)" v-model="timezone" type="number" :rules="rules.timeZone"/>
+                    <OrganizationSelect label="Головная организация" v-model="parent" :filter="filterParents"/>
+
+                    <q-input label="Разница в часах относительно МСК (UTC)" v-model="timezone" type="number" :rules="rules.timeZone"/>
                 </q-form>
             </q-card-section>
 
@@ -22,14 +24,20 @@
 </template>
 
 <script>
+import OrganizationSelect from "components/selects/OrganizationSelect";
+
 export default {
     name: "OrganizationDialog",
+    components: {
+        OrganizationSelect
+    },
     data() {
         return {
             loading: false,
             id: null,
             name: '',
             timezone: 3,
+            parent: null,
             rules: {
                 name: [
                     v => !!v || 'Заполните поле'
@@ -60,11 +68,12 @@ export default {
                     url: '/organizations/' + id,
                     method: 'get'
                 }).then(response => {
-                    const {id, name, timezone} = response.data;
+                    const {id, name, timezone, parent} = response.data;
 
                     this.id       = id;
                     this.name     = name;
                     this.timezone = timezone;
+                    this.parent   = parent;
 
                     this.$refs.dialog.show();
                 }).finally(() => {
@@ -81,6 +90,10 @@ export default {
                 name: this.name,
                 timezone: parseInt(this.timezone)
             };
+
+            if (this.parent) {
+                request.parent = this.parent.value
+            }
 
             const url = ['/organizations'];
 
@@ -104,6 +117,9 @@ export default {
             }).finally(() => {
                 this.loading = false;
             })
+        },
+        filterParents(item) {
+            return item.value !== this.id
         }
     }
 }

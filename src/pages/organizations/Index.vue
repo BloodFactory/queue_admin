@@ -3,7 +3,7 @@
         <OrganizationsTable ref="organizationsTable"
                             @openOrganizationDialog="openOrganizationDialog"/>
         <OrganizationDialog ref="organizationDialog"
-                            @save="$refs.organizationsTable.loadOrganizations()"/>
+                            @save="$refs.organizationsTable.fetchList()"/>
     </q-page>
 </template>
 
@@ -23,7 +23,7 @@ export default {
         }
     },
     mounted() {
-        this.$refs.organizationsTable.loadOrganizations();
+        this.$refs.organizationsTable.fetchList();
     }
 }
 </script>
