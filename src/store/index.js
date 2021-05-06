@@ -47,9 +47,20 @@ export default function (/* { ssrContext } */) {
         },
 
         actions: {
-            initApp({commit}) {
+            initApp({dispatch}) {
                 if (!security.getToken()) return;
 
+                let appLoader = dispatch('loadApp');
+
+                let organizationsLoader = dispatch('dictionary/organizations/fetchOptions');
+
+                return Promise.all([
+                    appLoader,
+                    organizationsLoader
+                ]);
+
+            },
+            loadApp({commit}) {
                 return api({
                     url: '/init',
                     method: 'get'
@@ -65,13 +76,12 @@ export default function (/* { ssrContext } */) {
                         Dark.set(false);
                     }
 
-                    commit('dictionary/organizations/setOrganizations', response.data.dictionaries.organizations);
-
                     return Promise.resolve();
                 }).catch(error => {
                     return Promise.reject(error);
-                })
+                });
             },
+
             logout({commit}) {
                 return new Promise((resolve, reject) => {
                     commit('setIsAuthorized', false);

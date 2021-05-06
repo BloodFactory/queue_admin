@@ -1,7 +1,9 @@
 <template>
     <q-card>
-        <q-card-section>
-            <div class="text-h6 q-mb-md">Физические лица</div>
+        <q-card-section class="flex flex-center">
+            <div class="text-h6 q-mb-md">Организации</div>
+
+            <q-space/>
 
             <div class="flex justify-between">
                 <q-btn color="primary"
@@ -9,34 +11,17 @@
                        label="Добавить"
                        no-caps
                        @click="addOrganization"/>
-                <div class="flex flex-center">
-                    <span class="q-mr-sm text-caption">Записей на странице:</span>
-                    <q-select :value="limit" :options="itemsPerPages" dense borderless @input="changeLimit"/>
-                </div>
             </div>
         </q-card-section>
 
         <q-card-section>
             <q-list>
-                <OrganizationItem v-for="organization in data"
+                <OrganizationItem v-for="organization in organizations"
                                   :key="organization.id"
                                   :item="organization"
                                   @openOrganization="openOrganization"
                                   @deleteOrganization="deleteOrganization"/>
             </q-list>
-
-            <div v-if="pages >1" class="q-py-lg flex justify-end">
-                <q-pagination :value="page"
-                              :max="pages"
-                              :max-pages="6"
-                              direction-links
-                              boundary-links
-                              icon-first="skip_previous"
-                              icon-last="skip_next"
-                              icon-prev="fast_rewind"
-                              icon-next="fast_forward"
-                              @input="changePage"/>
-            </div>
         </q-card-section>
     </q-card>
 </template>
@@ -66,6 +51,11 @@ export default {
                 15,
                 30
             ]
+        }
+    },
+    computed: {
+        organizations() {
+            return this.$store.getters['dictionary/organizations/getOptions'];
         }
     },
     methods: {
@@ -127,20 +117,6 @@ export default {
                     this.fetchList()
                 });
             });
-        },
-        changePage(page) {
-            if (page === this.page) return;
-
-            this.page = page;
-
-            this.fetchList({page});
-        },
-        changeLimit(limit) {
-            if (limit === this.limit) return;
-
-            this.limit = limit;
-
-            this.fetchList({limit});
         }
     }
 }

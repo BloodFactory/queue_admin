@@ -40,7 +40,7 @@
         <div v-if="expanded" class="organization-branches">
             <div v-for="branch in item.branches" class="organization-branch flex q-px-md q-py-sm">
                 <div class="organization-index q-mr-md">
-                    {{ branch.index }}
+                    {{ item.index }}.{{ branch.index }}
                 </div>
 
                 <div class="organization-name">

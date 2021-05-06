@@ -3,7 +3,7 @@
         <OrganizationsTable ref="organizationsTable"
                             @openOrganizationDialog="openOrganizationDialog"/>
         <OrganizationDialog ref="organizationDialog"
-                            @save="$refs.organizationsTable.fetchList()"/>
+                            @save="$store.dispatch('dictionary/organizations/fetchOptions')"/>
     </q-page>
 </template>
 
@@ -21,9 +21,6 @@ export default {
         openOrganizationDialog(id) {
             this.$refs.organizationDialog.show(id)
         }
-    },
-    mounted() {
-        this.$refs.organizationsTable.fetchList();
     }
 }
 </script>
