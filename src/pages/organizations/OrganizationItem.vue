@@ -80,10 +80,18 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .organization {
+    &:not(:last-child){
+        border-bottom: 1px solid #aaa;
+    }
+
     .organization-branch {
         padding-left: 100px;
+    }
+
+    .organization-wrap:hover {
+        cursor: pointer;
     }
 
     .organization-wrap,

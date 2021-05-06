@@ -16,7 +16,7 @@
             }}
         </q-td>
         <q-td>
-            {{ props.row.organization.label }}
+            {{ organizationName }}
         </q-td>
         <q-td auto-width>
             <q-btn v-if="$can('toggle', 'Users')"
@@ -54,6 +54,19 @@ export default {
     data() {
         return {
             loading: false
+        }
+    },
+    computed: {
+        organizationName() {
+            for (let organization of this.$store.getters['dictionary/organizations/getOptions']) {
+                if (organization.id === this.props.row.organization) return organization.name;
+
+                if (organization.hasOwnProperty('branches')) {
+                    for (let branch of organization.branches) {
+                        if (branch.id === this.props.row.organization) return `${organization.name} - ${branch.name}`;
+                    }
+                }
+            }
         }
     },
     methods: {

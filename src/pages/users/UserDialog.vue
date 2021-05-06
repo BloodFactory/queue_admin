@@ -1,6 +1,6 @@
 <template>
     <q-dialog ref="dialog" @hide="onReset" persistent>
-        <q-card style="width: 600px">
+        <q-card style="width: 800px; max-width: 800px">
             <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Пользователь</div>
             </q-card-section>
@@ -40,6 +40,11 @@
 
                     <OrganizationSelect v-model="organization" required/>
 
+                    <OrganizationSelect v-if="hasBranches"
+                                        v-model="branch"
+                                        :parent="organization ? organization.id : null"
+                                        label="Филиал"/>
+
                     <div class="text-h6 q-mt-lg">Личные даные</div>
 
                     <div class="row q-col-gutter-lg">
@@ -67,7 +72,7 @@
             </q-card-actions>
 
             <q-inner-loading :showing="loading">
-                <q-spinner-hourglass size="50px" color="primary" />
+                <q-spinner-hourglass size="50px" color="primary"/>
             </q-inner-loading>
         </q-card>
     </q-dialog>
@@ -87,6 +92,7 @@ export default {
             password: '',
             confirmPassword: '',
             organization: '',
+            branch: '',
             userData: {
                 lastName: '',
                 firstName: '',
@@ -97,6 +103,11 @@ export default {
             },
             isPassword: true,
             isConfirmPassword: true
+        }
+    },
+    computed: {
+        hasBranches() {
+            return this.organization && this.organization.hasOwnProperty('branches');
         }
     },
     methods: {
@@ -115,10 +126,28 @@ export default {
                 }).then(response => {
                     const {id, username, organization, userData} = response.data;
 
-                    this.id           = id;
-                    this.username     = username;
-                    this.organization = organization;
-                    this.userData     = userData;
+                    const organizations = this.$store.getters['dictionary/organizations/getOptions'];
+
+                    organization: for (let _organization of organizations) {
+                        if (organization === _organization.id) {
+                            this.organization = _organization;
+                            break;
+                        }
+
+                        if (_organization.hasOwnProperty('branches')) {
+                            for (let branch of _organization.branches) {
+                                if (organization === branch.id) {
+                                    this.organization = _organization;
+                                    this.branch       = branch;
+                                    break organization;
+                                }
+                            }
+                        }
+                    }
+
+                    this.id       = id;
+                    this.username = username;
+                    this.userData = userData;
 
                     this.$refs.dialog.show();
                 }).finally(() => {
@@ -131,6 +160,19 @@ export default {
 
             const url = ['/users'];
 
+            const data = {
+                username: this.username,
+                password: this.password,
+                confirmPassword: this.confirmPassword,
+                userData: this.userData
+            };
+
+            if (this.branch) {
+                data.organization = this.branch.id;
+            } else {
+                data.organization = this.organization.id;
+            }
+
             if (this.id) {
                 url.push(this.id)
             }
@@ -138,13 +180,7 @@ export default {
             this.$api({
                 url: url.join('/'),
                 method: 'post',
-                data: {
-                    username: this.username,
-                    password: this.password,
-                    confirmPassword: this.confirmPassword,
-                    organization: this.organization.value,
-                    userData: this.userData
-                }
+                data
             }).then(response => {
                 this.$refs.dialog.hide();
                 this.$emit('save');
@@ -167,6 +203,13 @@ export default {
                 lastName: '',
                 firstName: '',
                 middleName: ''
+            }
+        }
+    },
+    watch: {
+        organization(val) {
+            if (!val || !val.branches) {
+                this.branch = null;
             }
         }
     }

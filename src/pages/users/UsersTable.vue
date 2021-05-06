@@ -5,6 +5,7 @@
              :loading="loading"
              title="Пользователи"
              rows-per-page-label="Записей на странице:"
+             no-data-label="Нет записей"
              :pagination-label="paginationLabel"
              :pagination.sync="pagination"
              @request="fetchList">

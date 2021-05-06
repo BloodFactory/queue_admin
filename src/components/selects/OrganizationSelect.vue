@@ -2,33 +2,32 @@
     <q-select :label="label"
               v-model="localValue"
               :options="options"
-              :loading="loading"
-              @filter="loadOptions"
-              use-input
+              :option-value="item => !item ? null : item.id"
+              :option-label="item => !item ? '' : item.name"
+              :map-options="true"
               :rules="[val => !required || val || 'Укажите организацию']"/>
 </template>
 
 <script>
+
 export default {
     name: "OrganizationSelect",
     props: {
         label: {
             type: String,
-            default: 'Оргнанизация'
+            default: 'Организация'
         },
-        value: {},
+        value: null,
         required: {
             type: Boolean,
             default: false
         },
         filter: {
             type: Function
-        }
-    },
-    data() {
-        return {
-            options: [],
-            loading: false
+        },
+        parent: {
+            type: Number,
+            default: null
         }
     },
     computed: {
@@ -39,35 +38,15 @@ export default {
             set(val) {
                 this.$emit('input', val)
             }
-        }
-    },
-    methods: {
-        loadOptions(val, update, abort) {
-            this.loading = true;
+        },
+        options() {
+            if (this.parent) {
+                for (let organization of this.$store.getters['dictionary/organizations/getOptions']) {
+                    if (this.parent === organization.id && organization.hasOwnProperty('branches')) return organization.branches;
+                }
+            }
 
-            this.$api({
-                url: '/dictionary/organizations',
-                method: 'get'
-            }).then(response => {
-                update(() => {
-                    let data = response.data;
-
-                    if (null !== this.filter && typeof this.filter === 'function') {
-                        data = data.filter(this.filter);
-                    }
-
-                    this.options = data;
-                });
-            }).catch(error => {
-                this.$q.notify({
-                    message: error.response.data,
-                    type: 'negative',
-                    position: 'top'
-                });
-                abort();
-            }).finally(() => {
-                this.loading = false;
-            });
+            return this.$store.getters['dictionary/organizations/getOptions'];
         }
     }
 }

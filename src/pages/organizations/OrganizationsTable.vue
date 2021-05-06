@@ -1,6 +1,8 @@
 <template>
     <q-card>
         <q-card-section>
+            <div class="text-h6 q-mb-md">Физические лица</div>
+
             <div class="flex justify-between">
                 <q-btn color="primary"
                        icon-right="mdi-plus"
@@ -21,38 +23,6 @@
                                   :item="organization"
                                   @openOrganization="openOrganization"
                                   @deleteOrganization="deleteOrganization"/>
-                <!--                <q-item v-for="organization in data">-->
-                <!--                    <q-item-section style="width: 40px" side>-->
-                <!--                        <q-btn v-if="organization.branches" icon="mdi-plus" color="purple" size="xs" round unelevated/>-->
-                <!--                    </q-item-section>-->
-                <!--                    <q-item-section side>-->
-                <!--                        {{ organization.index }}-->
-                <!--                    </q-item-section>-->
-                <!--                    <q-item-section>-->
-                <!--                        <q-item-label>-->
-                <!--                            {{ organization.name }}-->
-                <!--                        </q-item-label>-->
-                <!--                    </q-item-section>-->
-
-                <!--                    <q-item-section top side>-->
-                <!--                        <div class="text-grey-8 q-gutter-xs">-->
-                <!--                            <q-btn v-if="$can('update', 'Organizations')"-->
-                <!--                                   color="primary"-->
-                <!--                                   icon="mdi-pencil"-->
-                <!--                                   size="sm"-->
-                <!--                                   flat-->
-                <!--                                   round-->
-                <!--                                   @click="openOrganization(organization.id)"/>-->
-                <!--                            <q-btn v-if="$can('delete', 'Organizations')"-->
-                <!--                                   color="red"-->
-                <!--                                   icon="mdi-delete"-->
-                <!--                                   size="sm"-->
-                <!--                                   flat-->
-                <!--                                   round-->
-                <!--                                   @click="deleteOrganization(organization.id)"/>-->
-                <!--                        </div>-->
-                <!--                    </q-item-section>-->
-                <!--                </q-item>-->
             </q-list>
 
             <div v-if="pages >1" class="q-py-lg flex justify-end">

@@ -5,12 +5,15 @@ import ability  from "src/helpers/ability";
 import security from "src/helpers/security";
 import {Dark}   from 'quasar';
 
+import dictionary from "./dictionaries";
 
 Vue.use(Vuex);
 
 export default function (/* { ssrContext } */) {
     const Store = new Vuex.Store({
-        modules: {},
+        modules: {
+            dictionary
+        },
 
         state: {
             isAuthorized: false,
@@ -61,6 +64,8 @@ export default function (/* { ssrContext } */) {
                     } else {
                         Dark.set(false);
                     }
+
+                    commit('dictionary/organizations/setOrganizations', response.data.dictionaries.organizations);
 
                     return Promise.resolve();
                 }).catch(error => {
