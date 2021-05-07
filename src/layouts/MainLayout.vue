@@ -48,18 +48,19 @@ export default {
                 },
                 {
                     label: 'Пользователи',
-                    icon: 'mdi-account',
                     route: 'Users'
                 },
                 {
                     label: 'Организации',
-                    icon: 'mdi-office-building',
                     route: 'Organizations'
                 },
                 {
                     label: 'Услуги',
-                    icon: 'mdi-room-service',
                     route: 'Services'
+                },
+                {
+                    label: 'TEST',
+                    route: 'Test'
                 }
             ]
         }

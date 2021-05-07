@@ -70,7 +70,6 @@
 
 <script>
 export default {
-    name: "OrganizationItem",
     props: ['item'],
     data() {
         return {

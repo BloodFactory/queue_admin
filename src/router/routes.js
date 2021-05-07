@@ -10,18 +10,23 @@ const routes = [
             },
             {
                 name: 'Users',
-                path: '/users',
-                component: () => import('pages/users/Index.vue')
+                path: 'users',
+                component: () => import('pages/users/Index')
             },
             {
                 name: 'Organizations',
-                path: '/organizations',
-                component: () => import('pages/organizations/Index.vue')
+                path: 'organizations',
+                component: () => import('pages/organizations/Index')
             },
             {
                 name: 'Services',
-                path: '/services',
-                component: () => import('pages/services/Index.vue')
+                path: 'services',
+                component: () => import('pages/services/Index')
+            },
+            {
+                name: 'Test',
+                path: 'test',
+                component: () => import('pages/test/Index')
             }
         ]
     },
