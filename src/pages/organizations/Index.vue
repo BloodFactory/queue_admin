@@ -1,7 +1,22 @@
 <template>
-    <q-page padding>
-        <OrganizationsTable ref="organizationsTable"
-                            @openOrganizationDialog="openOrganizationDialog"/>
+    <q-page>
+        <q-toolbar class="bg-white shadow-1">
+            <q-toolbar-title class="q-py-md">Справочник организаций</q-toolbar-title>
+
+            <q-btn
+                label="Добавить"
+                icon="mdi-plus"
+                color="purple"
+                class="no-border-radius"
+                unelevated
+                @click="$refs.organizationDialog.show(null)"
+            />
+        </q-toolbar>
+        <div class="q-pa-lg">
+            <OrganizationsTable ref="organizationsTable"
+                                @openOrganizationDialog="openOrganizationDialog"/>
+        </div>
+
         <OrganizationDialog ref="organizationDialog"
                             @save="$store.dispatch('dictionary/organizations/fetchOptions')"/>
     </q-page>

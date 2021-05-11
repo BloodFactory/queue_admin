@@ -22,11 +22,6 @@ const routes = [
                 name: 'Services',
                 path: 'services',
                 component: () => import('pages/services/Index')
-            },
-            {
-                name: 'Test',
-                path: 'test',
-                component: () => import('pages/test/Index')
             }
         ]
     },

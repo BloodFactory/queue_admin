@@ -6,15 +6,21 @@
                     {{ user.organization.name }}
                 </q-toolbar-title>
 
-                <router-link v-for="page in pages"
-                             :key="page.route"
-                             v-if="page.hasOwnProperty('label') && $can('open', page.route)"
-                             :to="{name: page.route}"
-                             v-slot="{ href, route, navigate, isActive, isExactActive }">
-                    <q-btn :label="page.label" @click="navigate" stretch flat class="q-border"/>
-                </router-link>
+                <q-tabs :value="page"
+                        inline-label shrink stretch
+                        @input="navigate"
+                >
+                    <router-link v-for="page in pages"
+                                 :key="page.route"
+                                 v-if="page.hasOwnProperty('label') && $can('open', page.route)"
+                                 :to="{name: page.route}"
+                                 v-slot="{ href, route, navigate, isActive, isExactActive }">
+                        <q-tab :name="page.route" :label="page.label"/>
+                    </router-link>
+                </q-tabs>
 
                 <q-space/>
+
                 <q-btn label="Учётная запись" flat stretch>
                     <q-menu>
                         <Account/>
@@ -42,10 +48,7 @@ export default {
     data() {
         return {
             pages: [
-                {
-                    icon: 'mdi-home',
-                    route: 'Homepage'
-                },
+
                 {
                     label: 'Пользователи',
                     route: 'Users'
@@ -57,10 +60,6 @@ export default {
                 {
                     label: 'Услуги',
                     route: 'Services'
-                },
-                {
-                    label: 'TEST',
-                    route: 'Test'
                 }
             ]
         }
@@ -71,6 +70,16 @@ export default {
         },
         darkMode() {
             return this.$q.dark.isActive;
+        },
+        page() {
+            return this.$route.name
+        }
+    },
+    methods: {
+        navigate(page) {
+            if (page === this.$route.name) return
+
+            this.$router.push({name: page})
         }
     }
 }

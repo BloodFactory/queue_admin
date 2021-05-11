@@ -11,10 +11,6 @@
                 <q-btn label="Сохранить" color="green" type="submit" form="serviceForm" flat/>
                 <q-btn label="Отмена" color="red" v-close-popup flat/>
             </q-card-actions>
-
-            <q-inner-loading :showing="loading">
-                <q-spinner-hourglass size="50px" color="primary"/>
-            </q-inner-loading>
         </q-card>
     </q-dialog>
 </template>
@@ -24,44 +20,30 @@ export default {
     name: "ServiceDialog",
     data() {
         return {
-            loading: false,
             id: null,
             name: ''
         }
     },
     methods: {
-        show(id) {
-            this.$refs.dialog.show();
-
-            this.id   = null;
-            this.name = '';
-
-            if (null !== id) {
-                this.loading = true;
-
-                this.$api({
-                    url: '/services/' + id,
-                    method: 'get'
-                }).then(response => {
-                    const {id, name} = response.data;
-
-                    this.id   = id;
-                    this.name = name;
-
-                    this.$refs.dialog.show();
-                }).finally(() => {
-                    this.loading = false;
-                });
+        show(service = null) {
+            if (null === service) {
+                this.id   = null
+                this.name = ''
+            } else {
+                this.id   = service.id
+                this.name = service.name
             }
+
+            this.$refs.dialog.show()
         },
         save() {
-            this.loading = true;
+            this.$q.loading.show()
 
             const request = {
                 name: this.name
-            };
+            }
 
-            const url = ['/services'];
+            const url = ['/services']
 
             if (this.id) {
                 url.push(this.id)
@@ -72,8 +54,8 @@ export default {
                 method: 'post',
                 data: request
             }).then(() => {
-                this.$refs.dialog.hide();
-                this.$emit('save');
+                this.$refs.dialog.hide()
+                this.$emit('save')
             }).catch(error => {
                 this.$q.notify({
                     message: 'Ошибка',
@@ -81,7 +63,7 @@ export default {
                     position: 'top'
                 })
             }).finally(() => {
-                this.loading = false;
+                this.$q.loading.hide()
             })
         }
     }

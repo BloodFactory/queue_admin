@@ -1,29 +1,5 @@
 <template>
-    <q-card>
-        <q-card-section class="flex flex-center">
-            <div class="text-h6 q-mb-md">Организации</div>
 
-            <q-space/>
-
-            <div class="flex justify-between">
-                <q-btn color="primary"
-                       icon-right="mdi-plus"
-                       label="Добавить"
-                       no-caps
-                       @click="addOrganization"/>
-            </div>
-        </q-card-section>
-
-        <q-card-section>
-            <q-list>
-                <OrganizationItem v-for="organization in organizations"
-                                  :key="organization.id"
-                                  :item="organization"
-                                  @openOrganization="openOrganization"
-                                  @deleteOrganization="deleteOrganization"/>
-            </q-list>
-        </q-card-section>
-    </q-card>
 </template>
 
 <script>

@@ -1,13 +1,13 @@
-import Vue      from 'vue';
-import Vuex     from 'vuex';
-import {api}    from 'boot/axios';
-import ability  from "src/helpers/ability";
-import security from "src/helpers/security";
-import {Dark}   from 'quasar';
+import Vue      from 'vue'
+import Vuex     from 'vuex'
+import {api}    from 'boot/axios'
+import ability  from 'src/helpers/ability'
+import security from 'src/helpers/security'
+import {Dark}   from 'quasar'
 
-import dictionary from "./dictionaries";
+import dictionary from './dictionaries'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default function (/* { ssrContext } */) {
     const Store = new Vuex.Store({
@@ -17,47 +17,39 @@ export default function (/* { ssrContext } */) {
 
         state: {
             isAuthorized: false,
-            darkMode: false,
             user: null
         },
 
         getters: {
             getIsAuthorized(state) {
-                return state.isAuthorized;
-            },
-            getDarkMode(state) {
-                return state.darkMode;
+                return state.isAuthorized
             },
             getUser(state) {
-                return state.user;
+                return state.user
             }
         },
 
         mutations: {
             setIsAuthorized(state, isAuthorized) {
-                state.isAuthorized = isAuthorized;
-            },
-            setDarkMode(state, darkMode) {
-                Dark.set(darkMode);
-                state.darkMode = darkMode;
+                state.isAuthorized = isAuthorized
             },
             setUser(state, user) {
-                state.user = user;
+                state.user = user
             }
         },
 
         actions: {
             initApp({dispatch}) {
-                if (!security.getToken()) return;
+                if (!security.getToken()) return
 
-                let appLoader = dispatch('loadApp');
+                let appLoader = dispatch('loadApp')
 
-                let organizationsLoader = dispatch('dictionary/organizations/fetchOptions');
+                let organizationsLoader = dispatch('dictionary/organizations/fetchOptions')
 
                 return Promise.all([
                     appLoader,
                     organizationsLoader
-                ]);
+                ])
 
             },
             loadApp({commit}) {
@@ -65,35 +57,35 @@ export default function (/* { ssrContext } */) {
                     url: '/init',
                     method: 'get'
                 }).then(response => {
-                    commit('setUser', response.data.user);
-                    ability.update(response.data.ability);
+                    commit('setUser', response.data.user)
+                    ability.update(response.data.ability)
 
-                    commit('setIsAuthorized', true);
+                    commit('setIsAuthorized', true)
 
                     if (response.data.settings && response.data.settings.darkMode) {
-                        Dark.set(true);
+                        Dark.set(true)
                     } else {
-                        Dark.set(false);
+                        Dark.set(false)
                     }
 
-                    return Promise.resolve();
+                    return Promise.resolve()
                 }).catch(error => {
-                    return Promise.reject(error);
-                });
+                    return Promise.reject(error)
+                })
             },
 
             logout({commit}) {
                 return new Promise((resolve, reject) => {
-                    commit('setIsAuthorized', false);
-                    security.clear();
+                    commit('setIsAuthorized', false)
+                    security.clear()
                     ability.update([
                         {
                             action: 'open',
                             resource: 'Login'
                         }
-                    ]);
+                    ])
 
-                    resolve();
+                    resolve()
                 })
             }
         },

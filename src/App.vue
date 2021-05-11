@@ -27,6 +27,7 @@ export default {
         }
     },
     mounted() {
+        this.$q.dark.set(false)
         const start    = new Date().getTime();
         this.isLoading = true;
         this.$store.dispatch('initApp')

@@ -45,7 +45,7 @@ export default {
                         darkMode
                     }
                 }).then(response => {
-                    this.$store.commit('setDarkMode', darkMode);
+                    this.$q.dark.set(darkMode)
                 }).catch(error => {
                     this.$q.notify({
                         message: error.response.data,
