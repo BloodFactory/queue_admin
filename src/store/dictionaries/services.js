@@ -1,4 +1,4 @@
-import {api}   from 'boot/axios';
+import {api} from 'boot/axios';
 
 export default {
     namespaced: true,
@@ -18,10 +18,10 @@ export default {
     actions: {
         fetchOptions({commit}) {
             return api({
-                url: '/organizations',
+                url: '/services/dictionary',
                 method: 'get'
             }).then(response => {
-                commit('setOrganizations', response.data);
+                commit('setOptions', response.data);
 
                 return Promise.resolve();
             }).catch(error => {

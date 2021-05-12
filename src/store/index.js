@@ -1,18 +1,19 @@
-import Vue      from 'vue'
-import Vuex     from 'vuex'
-import {api}    from 'boot/axios'
-import ability  from 'src/helpers/ability'
-import security from 'src/helpers/security'
-import {Dark}   from 'quasar'
-
+import Vue        from 'vue'
+import Vuex       from 'vuex'
+import {api}      from 'boot/axios'
+import ability    from 'src/helpers/ability'
+import security   from 'src/helpers/security'
+import {Dark}     from 'quasar'
 import dictionary from './dictionaries'
+import pages      from './pages'
 
 Vue.use(Vuex)
 
 export default function (/* { ssrContext } */) {
     const Store = new Vuex.Store({
         modules: {
-            dictionary
+            dictionary,
+            pages
         },
 
         state: {
@@ -45,10 +46,12 @@ export default function (/* { ssrContext } */) {
                 let appLoader = dispatch('loadApp')
 
                 let organizationsLoader = dispatch('dictionary/organizations/fetchOptions')
+                let servicesLoader      = dispatch('dictionary/services/fetchOptions')
 
                 return Promise.all([
                     appLoader,
-                    organizationsLoader
+                    organizationsLoader,
+                    servicesLoader
                 ])
 
             },

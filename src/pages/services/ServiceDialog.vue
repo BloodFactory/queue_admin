@@ -2,6 +2,9 @@
     <q-dialog ref="dialog" persistent>
         <q-card style="width: 400px">
             <q-card-section>
+                <div class="text-h6">Услуга</div>
+            </q-card-section>
+            <q-card-section>
                 <q-form id="serviceForm" ref="form" @submit.prevent="save">
                     <q-input label="Название" v-model="name"/>
                 </q-form>
@@ -21,11 +24,14 @@ export default {
     data() {
         return {
             id: null,
+            servicesGroupID: null,
             name: ''
         }
     },
     methods: {
-        show(service = null) {
+        show(servicesGroupID, service = null) {
+            this.servicesGroupID = servicesGroupID
+
             if (null === service) {
                 this.id   = null
                 this.name = ''
@@ -39,9 +45,10 @@ export default {
         save() {
             this.$q.loading.show()
 
-            const request = {
-                name: this.name
-            }
+            const data = new FormData()
+
+            data.set('servicesGroupID', this.servicesGroupID)
+            data.set('name', this.name)
 
             const url = ['/services']
 
@@ -52,7 +59,7 @@ export default {
             this.$api({
                 url: url.join('/'),
                 method: 'post',
-                data: request
+                data
             }).then(() => {
                 this.$refs.dialog.hide()
                 this.$emit('save')
