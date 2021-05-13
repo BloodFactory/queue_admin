@@ -9,7 +9,7 @@
                         <q-input
                             v-model.trim="filter"
                             class="q-px-md no-border-radius bg-grey-3"
-                            debounce="300"
+                            debounce="500"
                             dense borderless clearable
                         >
                             <template v-slot:prepend>
@@ -53,7 +53,13 @@ export default {
                 return this.$store.getters['pages/services/getFilter']
             },
             set(filter) {
+                this.$q.loading.show()
+
                 this.$store.commit('pages/services/setFilter', filter)
+
+                this.$store.dispatch('pages/services/fetchServices').then(() => {
+                    this.$q.loading.hide()
+                })
             }
         }
     },

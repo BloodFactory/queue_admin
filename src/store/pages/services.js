@@ -1,67 +1,40 @@
-import {api}    from 'boot/axios'
-import {Notify} from 'quasar'
+import {api} from 'boot/axios'
 
 export default {
     namespaced: true,
     state: {
         filter: '',
-        servicesGroups: null,
+        services: null
     },
     getters: {
         getFilter: state => state.filter,
-        getServicesGroups: state => {
-            if (null === state.servicesGroups) return null
-
-            return state.servicesGroups.filter(servicesGroup => !state.filter || servicesGroup.name.includes(state.filter))
-        }
+        getServices: state => state.services
     },
     mutations: {
         setFilter(state, filter) {
             state.filter = filter
         },
-        setServicesGroups(state, servicesGroups) {
-            state.servicesGroups = servicesGroups
+        setServices(state, services) {
+            state.services = services
         }
     },
     actions: {
-        fetchServicesGroups({commit}) {
-            return api({
-                url: '/servicesGroups',
-                method: 'get'
-            })
-                .then(response => {
-                    commit('setServicesGroups', response.data)
-
-                    return Promise.resolve(response)
-                })
-                .catch(error => {
-                    Notify.create({
-                        message: error.response.data,
-                        type: 'negative',
-                        position: 'top'
-                    })
-
-                    return Promise.reject(error)
-                })
-        },
-
-        fetchServices({commit}, {servicesGroupID}) {
+        fetchServices({state, commit}) {
             const params = {}
 
-            if (null !== servicesGroupID) {
-                params.servicesGroupID = servicesGroupID
+            if (state.filter) {
+                params.filter = state.filter
             }
 
-            api({
+            return api({
                 url: '/services',
                 method: 'get',
                 params
             })
                 .then(response => {
-                    commit('setServices', {
-                        services: response.data,
-                        servicesGroupID: servicesGroupID
-                    })
+                    commit('setServices', response.data)
+
+                    return Promise.resolve()
                 })
         }
     }

@@ -50,9 +50,9 @@ export default {
                 .then(() => {
                     this.$refs.dialog.hide()
 
-                    this.$store.dispatch('pages/services/fetchServicesGroups')
-
-                    this.$q.loading.hide()
+                    this.$store.dispatch('pages/services/fetchServices').then(() => {
+                        this.$q.loading.hide()
+                    })
                 })
                 .catch(error => {
                     this.$q.loading.hide()
@@ -65,7 +65,6 @@ export default {
                 })
         },
         show(serviceGroup = null) {
-            console.log(serviceGroup)
             if (serviceGroup) {
                 this.id   = serviceGroup.id
                 this.name = serviceGroup.name

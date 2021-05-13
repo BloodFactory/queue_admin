@@ -6,18 +6,15 @@
                     {{ user.organization.name }}
                 </q-toolbar-title>
 
-                <q-tabs :value="page"
-                        inline-label shrink stretch
-                        @input="navigate"
-                >
+                <q-btn-group unelevated stretch>
                     <router-link v-for="page in pages"
                                  :key="page.route"
                                  v-if="page.hasOwnProperty('label') && $can('open', page.route)"
                                  :to="{name: page.route}"
                                  v-slot="{ href, route, navigate, isActive, isExactActive }">
-                        <q-tab :name="page.route" :label="page.label"/>
+                        <q-btn flat :color="isActive ? 'yellow' : 'white'" :label="page.label" @click="navigate"/>
                     </router-link>
-                </q-tabs>
+                </q-btn-group>
 
                 <q-space/>
 

@@ -61,16 +61,19 @@ export default {
                 method: 'post',
                 data
             }).then(() => {
-                this.$refs.dialog.hide()
-                this.$emit('save')
+                this.$store.dispatch('pages/services/fetchServices').then(() => {
+                    this.$refs.dialog.hide()
+                    this.$q.loading.hide()
+                })
+
             }).catch(error => {
+                this.$q.loading.hide()
+
                 this.$q.notify({
                     message: 'Ошибка',
                     type: 'negative',
                     position: 'top'
                 })
-            }).finally(() => {
-                this.$q.loading.hide()
             })
         }
     }
