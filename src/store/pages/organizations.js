@@ -1,25 +1,25 @@
-import {api} from 'boot/axios'
+import {api} from "boot/axios";
 
 export default {
     namespaced: true,
     state: {
         filter: '',
-        services: null
+        organizations: null
     },
     getters: {
         getFilter: state => state.filter,
-        getServices: state => state.services
+        getOrganizations: state => state.organizations
     },
     mutations: {
         setFilter(state, filter) {
             state.filter = filter
         },
-        setServices(state, services) {
-            state.services = services
+        setOrganizations(state, organizations) {
+            state.organizations = organizations
         },
     },
     actions: {
-        fetchServices({state, commit}) {
+        fetchOrganizations({state, commit}) {
             const params = {}
 
             if (state.filter) {
@@ -27,12 +27,12 @@ export default {
             }
 
             return api({
-                url: '/services',
+                url: '/organizations',
                 method: 'get',
                 params
             })
                 .then(response => {
-                    commit('setServices', response.data)
+                    commit('setOrganizations', response.data)
 
                     return Promise.resolve()
                 })

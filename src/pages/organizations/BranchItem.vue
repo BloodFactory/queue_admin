@@ -1,11 +1,11 @@
 <template>
     <q-item>
         <q-item-section side>
-            <q-item-label>{{ service.index }}</q-item-label>
+            <q-item-label>{{ branch.index }}</q-item-label>
         </q-item-section>
 
         <q-item-section>
-            <q-item-label>{{ service.name }}</q-item-label>
+            <q-item-label>{{ branch.name }}</q-item-label>
         </q-item-section>
 
         <q-item-section top side>
@@ -17,7 +17,7 @@
                     class="no-border-radius"
                     size="sm"
                     unelevated
-                    @click="$emit('edit', service)"
+                    @click="$emit('edit', branch)"
                 />
                 <q-btn
                     label="Удалить"
@@ -36,25 +36,25 @@
 
 <script>
 export default {
-    props: ['service'],
+    props: ['branch'],
     methods: {
         deleteItem() {
             this.$q.dialog({
                 title: 'Удаление записи',
-                message: `Удалить запись ${this.service.name}`,
+                message: `Удалить запись ${this.branch.name}`,
                 cancel: 'Отмена',
                 persistent: true
             }).onOk(() => {
                 this.$q.loading.show()
 
                 this.$api({
-                    url: `services/${this.service.id}`,
+                    url: `organizations/${this.branch.id}`,
                     method: 'delete'
                 })
                     .then(() => {
                         return Promise.all([
-                            this.$store.dispatch('pages/services/fetchServices'),
-                            this.$store.dispatch('dictionary/services/fetchOptions')
+                            this.$store.dispatch('pages/organizations/fetchOrganizations'),
+                            this.$store.dispatch('dictionary/organizations/fetchOptions')
                         ])
                     })
                     .finally(() => {

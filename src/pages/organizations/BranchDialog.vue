@@ -21,13 +21,11 @@
 import OrganizationSelect from "components/selects/OrganizationSelect";
 
 export default {
-    name: "OrganizationDialog",
-    components: {
-        OrganizationSelect
-    },
+    components: {OrganizationSelect},
     data() {
         return {
             id: null,
+            organizationID: null,
             name: '',
             timezone: 3,
             rules: {
@@ -46,21 +44,22 @@ export default {
         }
     },
     methods: {
-        show(organization = null) {
-            if (organization) {
-                this.id       = organization.id
-                this.name     = organization.name
-                this.timezone = organization.timezone
-            } else {
+        show(organizationID, branch = null) {
+            this.organizationID = organizationID
+
+            if (null === branch) {
                 this.id       = null
                 this.name     = ''
                 this.timezone = 3
-
+            } else {
+                this.id       = branch.id
+                this.name     = branch.name
+                this.timezone = branch.timezone
             }
 
-            this.$refs.dialog.show();
+            this.$refs.dialog.show()
         },
-        save() {
+        save(){
             this.$q.loading.show()
 
             let url = '/organizations'
@@ -72,6 +71,7 @@ export default {
             const data = new FormData()
             data.set('name', this.name)
             data.set('timezone', this.timezone)
+            data.set('parent', this.organizationID)
 
             this.$api({
                 url,

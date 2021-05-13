@@ -1,41 +1,24 @@
 <template>
     <q-page>
-        <q-toolbar class="bg-white shadow-1">
-            <q-toolbar-title class="q-py-md">Справочник организаций</q-toolbar-title>
+        <ToolBar @addOrganization="$refs.organizationDialog.show()"/>
 
-            <q-btn
-                label="Добавить"
-                icon="mdi-plus"
-                color="purple"
-                class="no-border-radius"
-                unelevated
-                @click="$refs.organizationDialog.show(null)"
-            />
-        </q-toolbar>
-        <div class="q-pa-lg">
-            <OrganizationsTable ref="organizationsTable"
-                                @openOrganizationDialog="openOrganizationDialog"/>
-        </div>
+        <OrganizationsList ref="organizationsTable" @edit="(organization) => {$refs.organizationDialog.show(organization)}"/>
 
-        <OrganizationDialog ref="organizationDialog"
-                            @save="$store.dispatch('dictionary/organizations/fetchOptions')"/>
+        <OrganizationDialog ref="organizationDialog"/>
     </q-page>
 </template>
 
 <script>
-import OrganizationsTable from "pages/organizations/OrganizationsTable";
-import OrganizationDialog from "pages/organizations/OrganizationDialog";
+import ToolBar            from './ToolBar'
+import OrganizationsList  from './OrganizationsList'
+import OrganizationDialog from './OrganizationDialog'
 
 export default {
     name: "Organizations",
     components: {
-        OrganizationsTable,
+        ToolBar,
+        OrganizationsList,
         OrganizationDialog
-    },
-    methods: {
-        openOrganizationDialog(id) {
-            this.$refs.organizationDialog.show(id)
-        }
     }
 }
 </script>

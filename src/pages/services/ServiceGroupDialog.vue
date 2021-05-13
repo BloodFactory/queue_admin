@@ -1,5 +1,5 @@
 <template>
-    <q-dialog ref="dialog">
+    <q-dialog ref="dialog" persistent>
         <q-card style="width: 400px">
             <q-card-section>
                 <div class="text-h6">Группа услуг</div>
@@ -46,23 +46,16 @@ export default {
                 url,
                 method: 'post',
                 data
+            }).then(() => {
+                return Promise.all([
+                    this.$store.dispatch('pages/services/fetchServices'),
+                    this.$store.dispatch('dictionary/services/fetchOptions')
+                ])
+            }).then(() => {
+                this.$refs.dialog.hide()
+            }).finally(() => {
+                this.$q.loading.hide()
             })
-                .then(() => {
-                    this.$refs.dialog.hide()
-
-                    this.$store.dispatch('pages/services/fetchServices').then(() => {
-                        this.$q.loading.hide()
-                    })
-                })
-                .catch(error => {
-                    this.$q.loading.hide()
-
-                    this.$q.notify({
-                        message: error.response.data,
-                        type: 'negative',
-                        position: 'top'
-                    })
-                })
         },
         show(serviceGroup = null) {
             if (serviceGroup) {

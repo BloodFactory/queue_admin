@@ -1,107 +1,114 @@
 <template>
-    <div class="organization">
-        <div class="organization-wrap flex q-px-md q-py-sm">
-            <div class="organization-expand q-mr-md">
-                <q-btn v-if="item.branches"
-                       :icon="expanded ? 'mdi-minus' : 'mdi-plus'"
-                       color="purple"
-                       size="xs"
-                       round
-                       unelevated
-                       @click="expanded = !expanded"/>
-            </div>
-
-            <div class="organization-index q-mr-md">
-                {{ item.index }}
-            </div>
-
-            <div class="organization-name">
-                {{ item.name }}
-            </div>
-
-            <div class="organization-control q-gutter-xs">
-                <q-btn v-if="$can('update', 'Organizations')"
-                       color="primary"
-                       icon="mdi-pencil"
-                       size="sm"
-                       flat
-                       round
-                       @click="$emit('openOrganization', item.id)"/>
-                <q-btn v-if="$can('delete', 'Organizations')"
-                       color="red"
-                       icon="mdi-delete"
-                       size="sm"
-                       flat
-                       round
-                       @click="$emit('deleteOrganization', item.id)"/>
-            </div>
-        </div>
-
-        <div v-if="expanded" class="organization-branches">
-            <div v-for="branch in item.branches" class="organization-branch flex q-px-md q-py-sm">
-                <div class="organization-index q-mr-md">
-                    {{ item.index }}.{{ branch.index }}
+    <q-card>
+        <q-card-section>
+            <div class="row q-gutter-x-md">
+                <div style="width: 24px">
+                    <q-btn
+                        v-if="organization.branches.length > 0"
+                        :icon="expanded ? 'mdi-minus' : 'mdi-plus'"
+                        color="purple"
+                        size="xs"
+                        round
+                        unelevated
+                        @click="expanded = !expanded"
+                    />
                 </div>
 
-                <div class="organization-name">
-                    {{ branch.name }}
+                <div>
+                    {{ organization.index }}. {{ organization.name }}
                 </div>
 
-                <div class="organization-control q-gutter-xs">
-                    <q-btn v-if="$can('update', 'Organizations')"
-                           color="primary"
-                           icon="mdi-pencil"
-                           size="sm"
-                           flat
-                           round
-                           @click="$emit('openOrganization', branch.id)"/>
-                    <q-btn v-if="$can('delete', 'Organizations')"
-                           color="red"
-                           icon="mdi-delete"
-                           size="sm"
-                           flat
-                           round
-                           @click="$emit('deleteOrganization', branch.id)"/>
+                <q-space/>
+
+                <div class="row q-gutter-x-md">
+                    <q-btn
+                        v-if="$can('add', 'Organizations')"
+                        label="Добавить филиал"
+                        icon="mdi-plus"
+                        color="purple"
+                        size="sm"
+                        class="no-border-radius"
+                        unelevated
+                        @click="$refs.branchDialog.show(organization.id)"
+                    />
+
+                    <q-btn
+                        v-if="$can('update', 'Organizations')"
+                        label="Редактировать"
+                        icon="mdi-pencil"
+                        color="green"
+                        size="sm"
+                        class="no-border-radius"
+                        unelevated
+                        @click="$emit('edit')"
+                    />
+
+                    <q-btn
+                        v-if="$can('delete', 'Organizations')"
+                        label="Удалить"
+                        icon="mdi-delete"
+                        color="red"
+                        size="sm"
+                        class="no-border-radius"
+                        unelevated
+                        @click="deleteItem"
+                    />
                 </div>
             </div>
-        </div>
-    </div>
+        </q-card-section>
+
+        <template v-if="organization.branches.length > 0">
+            <q-slide-transition>
+                <div v-show="expanded" style="padding-left: 30px;">
+                    <BranchesList :branches="organization.branches" @edit="branch => {$refs.branchDialog.show(organization.id, branch)}"/>
+                </div>
+            </q-slide-transition>
+        </template>
+
+        <BranchDialog ref="branchDialog"/>
+    </q-card>
 </template>
 
 <script>
+import BranchDialog from './BranchDialog'
+import BranchesList from './BranchesList'
+
 export default {
-    props: ['item'],
+    props: ['organization'],
+    components: {
+        BranchDialog,
+        BranchesList
+    },
     data() {
         return {
             expanded: false
         }
+    },
+    methods: {
+        deleteItem() {
+            this.$q.dialog({
+                title: 'Удаление записи',
+                message: `Удалить запись ${this.organization.name}`,
+                cancel: 'Отмена',
+                persistent: true
+            }).onOk(() => {
+                this.$q.loading.show()
+
+                this.$api({
+                    url: `organizations/${this.organization.id}`,
+                    method: 'delete'
+                })
+                    .then(() => {
+                        return Promise.all([
+                            this.$store.dispatch('pages/organizations/fetchOrganizations'),
+                            this.$store.dispatch('dictionary/organizations/fetchOptions')
+                        ])
+                    })
+                    .finally(() => {
+                        this.$q.loading.hide()
+                    })
+            })
+        }
     }
 }
 </script>
-
-<style lang="scss">
-.organization {
-    &:not(:last-child){
-        border-bottom: 1px solid #aaa;
-    }
-
-    .organization-branch {
-        padding-left: 100px;
-    }
-
-    .organization-wrap:hover {
-        cursor: pointer;
-    }
-
-    .organization-wrap,
-    .organization-branch {
-        .organization-expand {
-            width: 25px;
-        }
-
-        .organization-name {
-            flex-grow: 1
-        }
-    }
-}
-</style>

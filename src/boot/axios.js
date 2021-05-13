@@ -1,33 +1,42 @@
-import Vue      from 'vue';
-import axios    from 'axios';
-import security from "src/helpers/security";
+import Vue      from 'vue'
+import axios    from 'axios'
+import security from "src/helpers/security"
+import {Notify} from 'quasar'
 
-const baseURL = process.env.API_BASE_URL;
+const baseURL = process.env.API_BASE_URL
 
 const api = axios.create({
     baseURL
-});
+})
 
 api.interceptors.request.use(config => {
     if (security.getToken()) {
-        config.headers.Authorization = 'Bearer ' + security.getToken();
+        config.headers.Authorization = 'Bearer ' + security.getToken()
     }
 
-    return config;
-});
+    return config
+})
 
-let isAlreadyRefreshing = false;
-let refreshSubscribers  = [];
+let isAlreadyRefreshing = false
+let refreshSubscribers  = []
 
 api.interceptors.response.use(response => response,
     error => {
-        const status        = error.response.status;
-        const originRequest = error.config;
+        const status        = error.response.status
+        const originRequest = error.config
 
-        if (401 !== status) return Promise.reject(error);
+        if (401 !== status) {
+            Notify.create({
+                message: error.response.data,
+                type: 'negative',
+                position: 'top',
+                closeBtn: 'Закрыть'
+            })
+            return Promise.reject(error)
+        }
 
         if (!isAlreadyRefreshing) {
-            isAlreadyRefreshing = true;
+            isAlreadyRefreshing = true
 
             axios({
                 baseURL,
@@ -37,40 +46,40 @@ api.interceptors.response.use(response => response,
                     refreshToken: security.getRefreshToken()
                 }
             }).then(response => {
-                const {token, refreshToken} = response.data;
+                const {token, refreshToken} = response.data
 
-                security.setToken(token);
-                security.setRefreshToken(refreshToken);
+                security.setToken(token)
+                security.setRefreshToken(refreshToken)
 
                 refreshSubscribers.map(subscriber => {
-                    subscriber(token);
-                });
+                    subscriber(token)
+                })
             }).catch((error) => {
                 refreshSubscribers.map(subscriber => {
-                    subscriber(false, error);
-                });
+                    subscriber(false, error)
+                })
             }).finally(() => {
-                isAlreadyRefreshing = false;
-                refreshSubscribers  = [];
+                isAlreadyRefreshing = false
+                refreshSubscribers  = []
             })
         }
 
         return new Promise((resolve, reject) => {
             refreshSubscribers.push((token, error = null) => {
                 if (null !== error) {
-                    reject(error);
+                    reject(error)
                 } else {
-                    originRequest.headers.Authorization = 'Bearer ' + token;
-                    axios(originRequest).then(response => resolve(response)).catch(error => reject(error));
+                    originRequest.headers.Authorization = 'Bearer ' + token
+                    axios(originRequest).then(response => resolve(response)).catch(error => reject(error))
                 }
             })
         })
     })
 
-Vue.prototype.$axios = axios;
-Vue.prototype.$api   = api;
+Vue.prototype.$axios = axios
+Vue.prototype.$api   = api
 
 export {
     axios,
     api
-};
+}

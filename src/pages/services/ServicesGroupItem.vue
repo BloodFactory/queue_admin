@@ -86,7 +86,6 @@ export default {
         }
     },
     methods: {
-
         deleteItem() {
             this.$q.dialog({
                 title: 'Удаление записи',
@@ -101,18 +100,13 @@ export default {
                     method: 'delete'
                 })
                     .then(() => {
-                        this.$store.dispatch('pages/services/fetchServices').then(() => {
-                            this.$q.loading.hide()
-                        })
+                        return Promise.all([
+                            this.$store.dispatch('pages/services/fetchServices'),
+                            this.$store.dispatch('dictionary/services/fetchOptions')
+                        ])
                     })
-                    .catch(error => {
+                    .finally(() => {
                         this.$q.loading.hide()
-
-                        this.$q.notify({
-                            message: error.response.data,
-                            type: 'negative',
-                            position: 'top'
-                        })
                     })
             })
         }

@@ -20,7 +20,6 @@
 
 <script>
 export default {
-    name: "ServiceDialog",
     data() {
         return {
             id: null,
@@ -56,24 +55,21 @@ export default {
                 url.push(this.id)
             }
 
+            console.log(this.servicesGroupID, this.name)
+
             this.$api({
                 url: url.join('/'),
                 method: 'post',
                 data
             }).then(() => {
-                this.$store.dispatch('pages/services/fetchServices').then(() => {
-                    this.$refs.dialog.hide()
-                    this.$q.loading.hide()
-                })
-
-            }).catch(error => {
+                return Promise.all([
+                    this.$store.dispatch('pages/services/fetchServices'),
+                    this.$store.dispatch('dictionary/services/fetchOptions')
+                ])
+            }).then(() => {
+                this.$refs.dialog.hide()
+            }).finally(() => {
                 this.$q.loading.hide()
-
-                this.$q.notify({
-                    message: 'Ошибка',
-                    type: 'negative',
-                    position: 'top'
-                })
             })
         }
     }
