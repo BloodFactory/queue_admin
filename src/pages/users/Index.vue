@@ -1,31 +1,21 @@
 <template>
-    <q-page padding>
-        <UsersTable ref="usersTable"
-                    @openUserDialog="openUserDialog"/>
-        <UserDialog ref="userDialog" @save="$refs.usersTable.loadUsers()"/>
+    <q-page>
+        <ToolBar @addUser="$refs.userDialog.show()"/>
+
+        <UsersList/>
+
+        <UserDialog ref="userDialog"/>
     </q-page>
 </template>
 
 <script>
-import UsersTable from "pages/users/UsersTable";
-import UserDialog from "pages/users/UserDialog";
 
 export default {
     name: "Users",
     components: {
-        UsersTable,
-        UserDialog
-    },
-    data() {
-        return {}
-    },
-    methods: {
-        openUserDialog(id) {
-            this.$refs.userDialog.show(id)
-        }
-    },
-    mounted() {
-        this.$refs.usersTable.loadUsers()
+        ToolBar: () => import('./ToolBar'),
+        UsersList: () => import('./UsersList'),
+        UserDialog: () => import('./UserDialog')
     }
 }
 </script>

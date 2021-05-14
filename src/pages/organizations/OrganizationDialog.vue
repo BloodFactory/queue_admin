@@ -1,13 +1,36 @@
 <template>
     <q-dialog ref="dialog" persistent>
         <q-card style="width: 450px">
+            <q-bar class="bg-light-blue-10 text-white">
+                <div class="text-bold">Организция</div>
+                <q-space/>
+                <q-btn
+                    icon="close"
+                    flat dense v-close-popup
+                />
+            </q-bar>
             <q-card-section>
                 <q-form ref="form" id="organizationForm" @submit.prevent="save">
-                    <q-input label="Название" v-model="name" :rules="rules.name"/>
+                    <q-input
+                        label="Название"
+                        v-model="name"
+                        :rules="rules.name"
+                        clearable
+                        outlined
+                    />
 
-                    <q-input label="Разница в часах относительно МСК (UTC)" v-model="timezone" type="number" :rules="rules.timeZone"/>
+                    <q-input
+                        label="Разница в часах относительно МСК (UTC)"
+                        v-model="timezone"
+                        type="number"
+                        :rules="rules.timeZone"
+                        clearable
+                        outlined
+                    />
                 </q-form>
             </q-card-section>
+
+            <q-separator/>
 
             <q-card-actions align="right">
                 <q-btn label="Сохранить" color="green" type="submit" form="organizationForm" flat/>

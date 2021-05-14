@@ -12,11 +12,9 @@
 </template>
 
 <script>
-import OrganizationItem from "./OrganizationItem";
-
 export default {
     components: {
-        OrganizationItem
+        OrganizationItem: () => import('./OrganizationItem')
     },
     computed: {
         organizations() {

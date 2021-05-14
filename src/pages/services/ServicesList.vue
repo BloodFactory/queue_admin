@@ -12,12 +12,10 @@
 </template>
 
 <script>
-import ServiceItem from './ServiceItem'
-
 export default {
     props: ['services'],
     components: {
-        ServiceItem
+        ServiceItem: () => import ('./ServiceItem')
     }
 }
 </script>

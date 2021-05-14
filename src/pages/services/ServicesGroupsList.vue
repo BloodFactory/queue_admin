@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import ServicesGroupItem from "./ServicesGroupItem";
-
 export default {
-    components: {ServicesGroupItem},
+    components: {
+        ServicesGroupItem: () => import('./ServicesGroupItem')
+    },
     computed: {
         servicesGroups() {
             return this.$store.getters['pages/services/getServices'] || []

@@ -60,7 +60,10 @@
         <template v-if="organization.branches.length > 0">
             <q-slide-transition>
                 <div v-show="expanded" style="padding-left: 30px;">
-                    <BranchesList :branches="organization.branches" @edit="branch => {$refs.branchDialog.show(organization.id, branch)}"/>
+                    <BranchesList
+                        :branches="organization.branches"
+                        @edit="branch => {$refs.branchDialog.show(organization.id, branch)}"
+                    />
                 </div>
             </q-slide-transition>
         </template>
@@ -70,14 +73,11 @@
 </template>
 
 <script>
-import BranchDialog from './BranchDialog'
-import BranchesList from './BranchesList'
-
 export default {
     props: ['organization'],
     components: {
-        BranchDialog,
-        BranchesList
+        BranchDialog: () => import('./BranchDialog'),
+        BranchesList: () => import('./BranchesList')
     },
     data() {
         return {
