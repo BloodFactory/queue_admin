@@ -1,7 +1,7 @@
 <template>
     <q-card-section class="q-pt-lg">
         <q-list>
-            <q-item-label header>Услуги</q-item-label>
+            <q-item-label header>Филиалы</q-item-label>
             <template v-for="(branch, index) in branches">
                 <BranchItem
                     :branch="branch"

@@ -117,6 +117,8 @@ export default {
             this.$refs.dialog.show()
         },
         save() {
+            this.$q.loading.show()
+
             const data = new FormData()
 
             data.append('username', this.form.username)
@@ -134,6 +136,12 @@ export default {
                 url,
                 method: 'post',
                 data
+            }).then(() => {
+                return this.$store.dispatch('pages/users/fetchUsers')
+            }).then(() => {
+                this.$refs.dialog.hide()
+            }).finally(() => {
+                this.$q.loading.hide()
             })
         }
     }
