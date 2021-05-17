@@ -2,9 +2,11 @@
     <q-page>
         <ToolBar @addUser="$refs.userDialog.show()"/>
 
-        <UsersList/>
+        <UsersList @editUserRights="user => {$refs.userRightsDialog.show(user)}"/>
 
         <UserDialog ref="userDialog"/>
+
+        <UserRightsDialog ref="userRightsDialog"/>
     </q-page>
 </template>
 
@@ -15,7 +17,8 @@ export default {
     components: {
         ToolBar: () => import('./ToolBar'),
         UsersList: () => import('./UsersList'),
-        UserDialog: () => import('./UserDialog')
+        UserDialog: () => import('./UserDialog'),
+        UserRightsDialog: () => import('./UserRightsDialog')
     }
 }
 </script>

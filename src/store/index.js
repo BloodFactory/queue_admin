@@ -45,12 +45,12 @@ export default function (/* { ssrContext } */) {
 
                 let appLoader = dispatch('loadApp')
 
-                // let organizationsLoader = dispatch('dictionary/organizations/fetchOptions')
+                let organizationsLoader = dispatch('dictionary/organizations/fetchOptions')
                 let servicesLoader = dispatch('dictionary/services/fetchOptions')
 
                 return Promise.all([
                     appLoader,
-                    // organizationsLoader,
+                    organizationsLoader,
                     servicesLoader
                 ])
 

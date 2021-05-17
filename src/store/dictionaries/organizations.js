@@ -18,7 +18,7 @@ export default {
     actions: {
         fetchOptions({commit}) {
             return api({
-                url: '/organizations',
+                url: '/organizations/dictionary',
                 method: 'get'
             }).then(response => {
                 commit('setOptions', response.data);

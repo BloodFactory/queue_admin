@@ -31,6 +31,7 @@
                                     color="indigo-6"
                                     class="no-border-radius"
                                     unelevated
+                                    @click="$emit('editUserRights', user)"
                                 />
                                 <q-btn
                                     label="Удалить"
