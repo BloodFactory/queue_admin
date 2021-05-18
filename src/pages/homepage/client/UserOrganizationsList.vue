@@ -8,8 +8,11 @@
                     v-for="userOrganization in userOrganizationsList"
                     :key="userOrganization.value"
                     :inset-level="userOrganization.inset ? 1 : 0"
-                    clickable>
-                    <q-item-section>{{ userOrganization.label }}</q-item-section>
+                    :active="organization && organization.value === userOrganization.value"
+                    clickable dense
+                    @click="organization = userOrganization"
+                >
+                    <q-item-section class="text-caption">{{ userOrganization.label }}</q-item-section>
                 </q-item>
             </q-list>
         </q-card>
@@ -18,7 +21,16 @@
 
 <script>
 export default {
+    props: ['value'],
     computed: {
+        organization: {
+            get() {
+                return this.value
+            },
+            set(org) {
+                this.$emit('input', org)
+            }
+        },
         userOrganizationsList() {
             const result        = []
             const organizations = this.$store.getters['dictionary/organizations/getOptions']
@@ -30,7 +42,6 @@ export default {
 
                 if (rights[organization.value] && rights[organization.value]['view']) {
                     inset = true
-                    console.log('Организация', organization)
                     result.push({
                         label: organization.label,
                         value: organization.value
@@ -40,7 +51,6 @@ export default {
                 if (organization.hasOwnProperty('branches') && organization.branches.length > 0) {
                     for (let branch of organization.branches) {
                         if (rights[branch.value] && rights[branch.value]['view']) {
-                            console.log('Филиал', branch)
                             result.push({
                                 label: branch.label,
                                 value: branch.value,
@@ -52,6 +62,11 @@ export default {
             }
 
             return result
+        }
+    },
+    mounted() {
+        if (this.userOrganizationsList.length) {
+            this.ticked = this.userOrganizationsList[0]
         }
     }
 }

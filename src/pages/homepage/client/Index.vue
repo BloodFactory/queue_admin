@@ -1,7 +1,7 @@
 <template>
     <q-page padding>
         <div class="row">
-            <UserOrganizationsList/>
+            <UserOrganizationsList v-model="organization"/>
         </div>
     </q-page>
 </template>
@@ -10,6 +10,11 @@
 export default {
     components: {
         UserOrganizationsList: () => import('./UserOrganizationsList')
+    },
+    data() {
+        return {
+            organization: null
+        }
     }
 }
 </script>
