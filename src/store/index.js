@@ -18,7 +18,8 @@ export default function (/* { ssrContext } */) {
 
         state: {
             isAuthorized: false,
-            user: null
+            user: null,
+            rights: {}
         },
 
         getters: {
@@ -27,6 +28,9 @@ export default function (/* { ssrContext } */) {
             },
             getUser(state) {
                 return state.user
+            },
+            getRights(state) {
+                return state.rights
             }
         },
 
@@ -36,6 +40,9 @@ export default function (/* { ssrContext } */) {
             },
             setUser(state, user) {
                 state.user = user
+            },
+            setRights(state, rights) {
+                state.rights = rights
             }
         },
 
@@ -46,7 +53,7 @@ export default function (/* { ssrContext } */) {
                 let appLoader = dispatch('loadApp')
 
                 let organizationsLoader = dispatch('dictionary/organizations/fetchOptions')
-                let servicesLoader = dispatch('dictionary/services/fetchOptions')
+                let servicesLoader      = dispatch('dictionary/services/fetchOptions')
 
                 return Promise.all([
                     appLoader,
@@ -60,12 +67,17 @@ export default function (/* { ssrContext } */) {
                     url: '/init',
                     method: 'get'
                 }).then(response => {
-                    commit('setUser', response.data.user)
-                    ability.update(response.data.ability)
+                    const data = response.data
+                    commit('setUser', data.user)
+                    ability.update(data.ability)
+
+                    if (data.hasOwnProperty('rights')) {
+                        commit('setRights', data.rights)
+                    }
 
                     commit('setIsAuthorized', true)
 
-                    if (response.data.settings && response.data.settings.darkMode) {
+                    if (data.settings && data.settings.darkMode) {
                         Dark.set(true)
                     } else {
                         Dark.set(false)
