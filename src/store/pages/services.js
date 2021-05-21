@@ -30,7 +30,9 @@ export default {
                     return result
                 }
 
-                return filterServices(state.services)
+                const services = JSON.parse(JSON.stringify(state.services))
+
+                return filterServices(services)
             } else {
                 return state.services
             }

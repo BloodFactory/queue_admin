@@ -1,5 +1,5 @@
 <template>
-    <q-card>
+    <q-card class="no-border-radius">
         <q-card-section>
             <div class="row q-gutter-x-md">
                 <div style="width: 24px">
