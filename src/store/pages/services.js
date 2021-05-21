@@ -8,7 +8,33 @@ export default {
     },
     getters: {
         getFilter: state => state.filter,
-        getServices: state => state.services
+        getServices: state => {
+            if (state.filter) {
+                function filterServices(services) {
+                    const result = []
+                    for (let service of services) {
+                        if (service.name.includes(state.filter)) {
+                            result.push(service)
+                            continue
+                        }
+
+                        if (service.children && service.children.length > 0) {
+                            const children = filterServices(service.children)
+
+                            if (children.length > 0) {
+                                service.children = children
+                                result.push(service)
+                            }
+                        }
+                    }
+                    return result
+                }
+
+                return filterServices(state.services)
+            } else {
+                return state.services
+            }
+        }
     },
     mutations: {
         setFilter(state, filter) {

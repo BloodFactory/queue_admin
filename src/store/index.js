@@ -6,6 +6,7 @@ import security   from 'src/helpers/security'
 import {Dark}     from 'quasar'
 import dictionary from './dictionaries'
 import pages      from './pages'
+import dialogs    from './dialogs'
 
 Vue.use(Vuex)
 
@@ -13,7 +14,8 @@ export default function (/* { ssrContext } */) {
     const Store = new Vuex.Store({
         modules: {
             dictionary,
-            pages
+            pages,
+            dialogs
         },
 
         state: {

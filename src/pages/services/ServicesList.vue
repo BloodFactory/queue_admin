@@ -1,21 +1,27 @@
 <template>
-    <q-card-section class="q-pt-lg">
-        <q-list>
-            <q-item-label header>Услуги</q-item-label>
-            <template v-for="(service, index) in services">
-                <ServiceItem :service="service" @edit="service => {$emit('edit', service)}"/>
-
-                <q-separator v-if="index < services.length - 1"/>
-            </template>
-        </q-list>
-    </q-card-section>
+    <div class="q-pa-lg">
+        <div class="column q-gutter-y-xs">
+            <ServiceItem
+                v-for="service in services"
+                :key="service.id"
+                :service="service"
+            />
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
-    props: ['services'],
     components: {
         ServiceItem: () => import ('./ServiceItem')
+    },
+    computed: {
+        services() {
+            return this.$store.getters['pages/services/getServices']
+        }
+    },
+    mounted() {
+        this.$store.dispatch('pages/services/fetchServices')
     }
 }
 </script>

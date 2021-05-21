@@ -1,23 +1,21 @@
 <template>
     <q-page>
-        <ToolBar @addServicesGroup="$refs.serviceGroupDialog.show()"/>
+        <ToolBar/>
 
-        <ServicesGroupsList ref="servicesGroupsList" @edit="(servicesGroup) => {$refs.serviceGroupDialog.show(servicesGroup)}"/>
+        <ServicesList/>
 
-        <ServiceGroupDialog ref="serviceGroupDialog"/>
+        <ServicesDialog/>
     </q-page>
 </template>
 
 <script>
-import ToolBar            from './ToolBar'
-import ServicesGroupsList from './ServicesGroupsList'
-import ServiceGroupDialog from './ServiceGroupDialog'
+import ToolBar from './ToolBar'
 
 export default {
     components: {
         ToolBar,
-        ServicesGroupsList,
-        ServiceGroupDialog
+        ServicesList: () => import('./ServicesList'),
+        ServicesDialog: () => import('./ServiceDialog')
     }
 }
 </script>

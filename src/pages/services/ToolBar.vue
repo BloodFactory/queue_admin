@@ -23,12 +23,12 @@
 
             <q-btn
                 v-if="$can('add', 'Services')"
-                label="Добавить группу услуг"
+                label="Добавить"
                 icon="mdi-plus"
                 color="purple"
                 class="no-border-radius"
                 unelevated
-                @click="$emit('addServicesGroup')"
+                @click="$store.dispatch('dialogs/service/open')"
             />
 
             <q-btn
@@ -37,7 +37,7 @@
                 color="primary"
                 class="no-border-radius"
                 unelevated
-                @click="reset"
+                @click="$store.dispatch('pages/services/fetchServices')"
             />
         </div>
     </q-toolbar>
@@ -58,15 +58,6 @@ export default {
 
                 this.reset()
             }
-        }
-    },
-    methods: {
-        reset() {
-            this.$q.loading.show()
-
-            this.$store.dispatch('pages/services/fetchServices').finally(() => {
-                this.$q.loading.hide()
-            })
         }
     }
 }
