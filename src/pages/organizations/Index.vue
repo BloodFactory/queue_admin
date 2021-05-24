@@ -2,9 +2,9 @@
     <q-page>
         <ToolBar @addOrganization="$refs.organizationDialog.show()"/>
 
-        <OrganizationsList ref="organizationsTable" @edit="(organization) => {$refs.organizationDialog.show(organization)}"/>
+        <OrganizationsList/>
 
-        <OrganizationDialog ref="organizationDialog"/>
+        <OrganizationDialog/>
     </q-page>
 </template>
 

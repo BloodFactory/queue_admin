@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-lg">
-        <div class="column q-gutter-y-md">
+        <div class="column q-gutter-y-xs">
             <q-card class="bg-cyan-10 text-white shadow-0" style="height: 36px;" square>
                 <q-card-section class="q-py-sm">
                     <div class="row">
@@ -14,7 +14,12 @@
                 </q-card-section>
             </q-card>
 
-            <q-card v-for="(user, index) in users" :key="user.username" square>
+            <q-card
+                v-for="(user, index) in users"
+                :key="user.username"
+                class="shadow-0"
+                square
+            >
                 <q-card-section>
                     <div class="row">
                         <div class="q-px-sm index">{{ index + 1 }}</div>
@@ -25,6 +30,7 @@
                         <div class="q-px-sm actions">
                             <div class="q-gutter-x-md">
                                 <q-btn
+                                    v-if="$can('update', 'Users')"
                                     label="Настроить права"
                                     size="sm"
                                     icon="mdi-badge-account-horizontal"
@@ -32,6 +38,16 @@
                                     class="no-border-radius"
                                     unelevated
                                     @click="$emit('editUserRights', user)"
+                                />
+                                <q-btn
+                                    v-if="$can('update', 'Users')"
+                                    label="Редактировать"
+                                    icon="mdi-pencil"
+                                    color="green"
+                                    size="sm"
+                                    class="no-border-radius"
+                                    unelevated
+                                    @click="$store.dispatch('dialogs/user/open', {user})"
                                 />
                                 <q-btn
                                     label="Удалить"
@@ -52,9 +68,6 @@
 
 <script>
 export default {
-    components: {
-        UserItem: () => import ('./UserItem')
-    },
     computed: {
         users() {
             return this.$store.getters['pages/users/getUsers'] || []
@@ -78,7 +91,7 @@ export default {
 }
 
 .actions {
-    width: 305px;
+    width: 460px;
 }
 
 .username,

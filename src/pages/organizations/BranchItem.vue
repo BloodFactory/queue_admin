@@ -17,7 +17,7 @@
                     class="no-border-radius"
                     size="sm"
                     unelevated
-                    @click="$emit('edit', branch)"
+                    @click="$store.dispatch('dialogs/organizationBranch/open', {branch})"
                 />
                 <q-btn
                     label="Удалить"

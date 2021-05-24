@@ -1,6 +1,6 @@
 <template>
-    <q-dialog ref="dialog">
-        <q-card style="width: 650px">
+    <q-dialog v-model="dialog">
+        <q-card style="min-width: 850px; width: 850px">
             <q-bar class="bg-light-blue-10 text-white">
                 <div class="text-bold">Пользователь</div>
                 <q-space/>
@@ -11,36 +11,39 @@
             </q-bar>
 
             <q-card-section>
-                <q-form id="userForm" @submit="save">
-                    <q-input
-                        label="Имя пользователя"
-                        v-model="form.username"
-                        :rules="[val => !!val || 'Введите имя пользователя']"
-                        outlined clearable
-                    />
-
+                <q-form id="userForm" @submit="$store.dispatch('dialogs/user/save')">
                     <div class="row q-col-gutter-lg">
-                        <div class="col">
+                        <div class="col-4">
+                            <q-input
+                                label="Имя пользователя"
+                                v-model="username"
+                                :rules="[val => !!val || 'Введите имя пользователя']"
+                                outlined clearable
+                            />
+                        </div>
+                        <div class="col-4">
                             <q-input
                                 label="Пароль"
                                 :type="isPassword ? 'password' : 'text'"
-                                v-model="form.password"
+                                v-model="password"
                                 :rules="[val => id || !!val || 'Введите пароль']"
                                 outlined clearable
                             >
                                 <template v-slot:append>
-                                    <q-icon :name="isPassword ? 'visibility_off' : 'visibility'"
-                                            class="cursor-pointer"
-                                            @click="isPassword = !isPassword"/>
+                                    <q-icon
+                                        :name="isPassword ? 'visibility_off' : 'visibility'"
+                                        class="cursor-pointer"
+                                        @click="isPassword = !isPassword"
+                                    />
                                 </template>
                             </q-input>
                         </div>
-                        <div class="col">
+                        <div class="col-4">
                             <q-input
-                                label="Пароль (ещё раз)"
+                                label="Повторите пароль"
                                 :type="isConfirmPassword ? 'password' : 'text'"
-                                v-model="form.confirmPassword"
-                                :rules="[val => id || !!val || 'Введите подтверждение пароля', val => val === form.password || 'Не соответствует паролю']"
+                                v-model="confirmPassword"
+                                :rules="[val => id || !!val || 'Введите подтверждение пароля', val => val === password || 'Не соответствует паролю']"
                                 outlined clearable
                             >
                                 <template v-slot:append>
@@ -58,7 +61,7 @@
                         <div class="col">
                             <q-input
                                 label="Фамилия"
-                                v-model="form.userData.lastName"
+                                v-model="lastName"
                                 :rules="[val => !!val || 'Введите фамилию']"
                                 outlined clearable
                             />
@@ -66,7 +69,7 @@
                         <div class="col">
                             <q-input
                                 label="Имя"
-                                v-model="form.userData.firstName"
+                                v-model="firstName"
                                 :rules="[val => id || !!val || 'Введите имя']"
                                 outlined clearable
                             />
@@ -74,7 +77,7 @@
                         <div class="col">
                             <q-input
                                 label="Отчество"
-                                v-model="form.userData.middleName"
+                                v-model="middleName"
                                 outlined clearable
                             />
                         </div>
@@ -96,53 +99,74 @@
 export default {
     data() {
         return {
-            id: null,
             isPassword: true,
-            isConfirmPassword: true,
-            form: {
-                username: '',
-                password: '',
-                confirmPassword: '',
-                organization: null,
-                userData: {
-                    lastName: '',
-                    firstName: '',
-                    middleName: ''
-                }
-            }
+            isConfirmPassword: true
         }
     },
-    methods: {
-        show() {
-            this.$refs.dialog.show()
+    computed: {
+        id: {
+            get() {
+                return this.$store.getters['dialogs/user/getId']
+            },
+            set(id) {
+                this.$store.commit('dialogs/user/setId', id)
+            }
         },
-        save() {
-            this.$q.loading.show()
-
-            const data = new FormData()
-
-            data.append('username', this.form.username)
-            data.append('password', this.form.password)
-            data.append('confirmPassword', this.form.confirmPassword)
-            data.append('userData[lastName]', this.form.userData.lastName)
-            data.append('userData[firstName]', this.form.userData.firstName)
-            data.append('userData[middleName]', this.form.userData.middleName)
-
-            let url = '/users'
-
-            if (this.id) url += '/' + this.id
-
-            this.$api({
-                url,
-                method: 'post',
-                data
-            }).then(() => {
-                return this.$store.dispatch('pages/users/fetchUsers')
-            }).then(() => {
-                this.$refs.dialog.hide()
-            }).finally(() => {
-                this.$q.loading.hide()
-            })
+        dialog: {
+            get() {
+                return this.$store.getters['dialogs/user/getDialog']
+            },
+            set(dialog) {
+                this.$store.commit('dialogs/user/setDialog', dialog)
+            }
+        },
+        password: {
+            get() {
+                return this.$store.getters['dialogs/user/getPassword']
+            },
+            set(password) {
+                this.$store.commit('dialogs/user/setPassword', password)
+            }
+        },
+        confirmPassword: {
+            get() {
+                return this.$store.getters['dialogs/user/getConfirmPassword']
+            },
+            set(confirmPassword) {
+                this.$store.commit('dialogs/user/setConfirmPassword', confirmPassword)
+            }
+        },
+        username: {
+            get() {
+                return this.$store.getters['dialogs/user/getUsername']
+            },
+            set(username) {
+                this.$store.commit('dialogs/user/setUsername', username)
+            }
+        },
+        lastName: {
+            get() {
+                return this.$store.getters['dialogs/user/getLastName']
+            },
+            set(lastName) {
+                this.$store.commit('dialogs/user/setLastName', lastName)
+            }
+        },
+        firstName: {
+            get() {
+                return this.$store.getters['dialogs/user/getFirstName']
+            },
+            set(firstName) {
+                this.$store.commit('dialogs/user/setFirstName', firstName)
+            }
+        },
+        middleName: {
+            get() {
+                return this.$store.getters['dialogs/user/getMiddleName']
+            },
+            set(middleName) {
+                this.$store.commit('dialogs/user/setMiddleName', middleName)
+            }
         }
     }
 }

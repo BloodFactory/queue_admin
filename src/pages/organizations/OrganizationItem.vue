@@ -28,7 +28,7 @@
                         size="sm"
                         class="no-border-radius"
                         unelevated
-                        @click="$refs.branchDialog.show(organization.id)"
+                        @click="$store.dispatch('dialogs/organizationBranch/open',{organizationId: organization.id})"
                     />
 
                     <q-btn
@@ -39,7 +39,7 @@
                         size="sm"
                         class="no-border-radius"
                         unelevated
-                        @click="$emit('edit')"
+                        @click="$store.dispatch('dialogs/organization/open', {organization})"
                     />
 
                     <q-btn
@@ -59,10 +59,7 @@
         <template v-if="organization.branches.length > 0">
             <q-slide-transition>
                 <div v-show="expanded" style="padding-left: 30px;">
-                    <BranchesList
-                        :branches="organization.branches"
-                        @edit="branch => {$refs.branchDialog.show(organization.id, branch)}"
-                    />
+                    <BranchesList :branches="organization.branches"/>
                 </div>
             </q-slide-transition>
         </template>

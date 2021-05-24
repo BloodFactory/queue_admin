@@ -28,7 +28,7 @@
                 color="purple"
                 class="no-border-radius"
                 unelevated
-                @click="$emit('addUser')"
+                @click="$store.dispatch('dialogs/user/open')"
             />
 
             <q-btn

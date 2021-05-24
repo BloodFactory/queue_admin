@@ -5,7 +5,6 @@
                 v-for="(organization, index) in organizations"
                 :key="organization.id"
                 :organization="organization"
-                @edit="$emit('edit', organization)"
             />
         </div>
     </div>

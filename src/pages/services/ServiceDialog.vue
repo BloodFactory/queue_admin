@@ -50,14 +50,6 @@ export default {
                 this.$store.commit('dialogs/service/setName', name)
             }
         },
-        id: {
-            get() {
-                return this.$store.getters['dialogs/service/getId']
-            },
-            set(id) {
-                this.$store.commit('dialogs/service/setId', id)
-            }
-        },
         parent: {
             get() {
                 return this.$store.getters['dialogs/service/getParent']

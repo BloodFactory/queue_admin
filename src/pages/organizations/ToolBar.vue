@@ -28,7 +28,7 @@
                 color="purple"
                 class="no-border-radius"
                 unelevated
-                @click="$emit('addOrganization')"
+                @click="$store.dispatch('dialogs/organization/open')"
             />
 
             <q-btn

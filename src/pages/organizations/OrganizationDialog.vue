@@ -1,5 +1,5 @@
 <template>
-    <q-dialog ref="dialog" persistent>
+    <q-dialog v-model="dialog" persistent>
         <q-card style="width: 450px">
             <q-bar class="bg-light-blue-10 text-white">
                 <div class="text-bold">Организция</div>
@@ -10,7 +10,7 @@
                 />
             </q-bar>
             <q-card-section>
-                <q-form ref="form" id="organizationForm" @submit.prevent="save">
+                <q-form ref="form" id="organizationForm" @submit.prevent="$store.dispatch('dialogs/organization/save')">
                     <q-input
                         label="Название"
                         v-model="name"
@@ -50,9 +50,6 @@ export default {
     },
     data() {
         return {
-            id: null,
-            name: '',
-            timezone: 3,
             rules: {
                 name: [
                     v => !!v || 'Заполните поле'
@@ -68,51 +65,30 @@ export default {
             }
         }
     },
-    methods: {
-        show(organization = null) {
-            if (organization) {
-                this.id       = organization.id
-                this.name     = organization.name
-                this.timezone = organization.timezone
-            } else {
-                this.id       = null
-                this.name     = ''
-                this.timezone = 3
-
+    computed: {
+        dialog: {
+            get() {
+                return this.$store.getters['dialogs/organization/getDialog']
+            },
+            set(dialog) {
+                this.$store.commit('dialogs/organization/setDialog', dialog)
             }
-
-            this.$refs.dialog.show();
         },
-        save() {
-            this.$q.loading.show()
-
-            let url = '/organizations'
-
-            if (null !== this.id) {
-                url += '/' + this.id
+        name: {
+            get() {
+                return this.$store.getters['dialogs/organization/getName']
+            },
+            set(name) {
+                this.$store.commit('dialogs/organization/setName', name)
             }
-
-            const data = new FormData()
-            data.set('name', this.name)
-            data.set('timezone', this.timezone)
-
-            this.$api({
-                url,
-                method: 'post',
-                data
-            }).then(() => {
-                return Promise.all([
-                    this.$store.dispatch('pages/organizations/fetchOrganizations'),
-                    this.$store.dispatch('dictionary/organizations/fetchOptions')
-                ])
-            }).then(() => {
-                this.$refs.dialog.hide()
-            }).finally(() => {
-                this.$q.loading.hide()
-            })
         },
-        filterParents(item) {
-            return item.value !== this.id
+        timezone: {
+            get() {
+                return this.$store.getters['dialogs/organization/getTimezone']
+            },
+            set(timezone) {
+                this.$store.commit('dialogs/organization/setTimezone', timezone)
+            }
         }
     }
 }

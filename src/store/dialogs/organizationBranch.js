@@ -1,19 +1,21 @@
-import {api}     from 'boot/axios'
-import {Loading} from 'quasar'
+import {Loading} from "quasar";
+import {api}     from "boot/axios";
 
 export default {
     namespaced: true,
     state: {
         dialog: false,
         id: null,
-        parent: null,
         name: '',
+        organizationId: null,
+        timezone: 0
     },
     getters: {
         getDialog: state => state.dialog,
         getName: state => state.name,
         getId: state => state.id,
-        getParent: state => state.parent
+        getTimezone: state => state.timezone,
+        getOrganizationId: state => state.organizationId
     },
     mutations: {
         setDialog: (state, dialog) => {
@@ -25,26 +27,26 @@ export default {
         setId: (state, id) => {
             state.id = id
         },
-        setParent: (state, parent) => {
-            state.parent = parent
+        setTimezone: (state, timezone) => {
+            state.timezone = timezone
+        },
+        setOrganizationId: (state, organizationId) => {
+            state.organizationId = organizationId
         }
     },
     actions: {
         open({commit}, props = null) {
             commit('setId', null)
             commit('setName', '')
+            commit('setTimezone', 0)
+            commit('setOrganizationId', props.organizationId)
 
-            if (props && props.service) {
-                const {id, name} = props.service
+            if (props && props.branch) {
+                const {id, name, timezone} = props.branch
 
                 commit('setId', id)
                 commit('setName', name)
-            }
-
-            if (props && props.parent) {
-                commit('setParent', props.parent)
-            } else {
-                commit('setParent', null)
+                commit('setTimezone', timezone)
             }
 
             commit('setDialog', true)
@@ -52,13 +54,14 @@ export default {
         save({state, commit, dispatch}) {
             Loading.show()
 
-            const url  = ['/services']
+            const url  = ['/organizations']
             const data = new FormData
 
             data.append('name', state.name)
+            data.append('timezone', state.timezone.toString())
+            data.append('parent', state.organizationId.toString())
 
             if (null !== state.id) url.push(state.id.toString())
-            if (null !== state.parent) data.append('parent', state.parent)
 
             api({
                 url: url.join('/'),
@@ -66,8 +69,8 @@ export default {
                 data
             }).then(() => {
                 return Promise.all([
-                    dispatch('pages/services/fetchServices', null, {root: true}),
-                    dispatch('dictionary/services/fetchOptions', null, {root: true})
+                    dispatch('pages/organizations/fetchOrganizations', null, {root: true}),
+                    dispatch('dictionary/organizations/fetchOptions', null, {root: true})
                 ])
             }).then(() => {
                 commit('setDialog', false)
