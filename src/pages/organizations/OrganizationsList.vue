@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-lg">
-        <div class="column q-gutter-y-sm">
+        <div class="column q-gutter-y-xs">
             <OrganizationItem
                 v-for="(organization, index) in organizations"
                 :key="organization.id"
