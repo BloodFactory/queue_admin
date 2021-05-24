@@ -9,13 +9,15 @@
                             color="purple"
                             size="sm"
                             class="no-border-radius"
-                            dense unelevated
+                            dense unelevated flat
                             @click="expanded = !expanded"
                         />
                     </template>
 
                 </div>
-                <div><span class="q-mr-sm text-grey" style="width: 21px">{{ service.index }}.</span><span class="text-bold">{{ service.name }}</span></div>
+                <div style="">
+                    <span class="q-mr-sm text-grey" style="width: 21px">{{ service.index }}.</span><span class="text-bold">{{ service.name }}</span>
+                </div>
                 <q-space/>
                 <div class="q-gutter-x-sm">
                     <q-btn

@@ -7,9 +7,8 @@
                         v-if="organization.branches.length > 0"
                         :icon="expanded ? 'mdi-minus' : 'mdi-plus'"
                         color="purple"
-                        size="xs"
-                        round
-                        unelevated
+                        size="sm"
+                        dense unelevated flat
                         @click="expanded = !expanded"
                     />
                 </div>
