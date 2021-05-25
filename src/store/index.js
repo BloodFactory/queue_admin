@@ -3,7 +3,10 @@ import Vuex       from 'vuex'
 import {api}      from 'boot/axios'
 import ability    from 'src/helpers/ability'
 import security   from 'src/helpers/security'
-import {Dark}     from 'quasar'
+import {
+    Dark,
+    Notify
+}                 from 'quasar'
 import dictionary from './dictionaries'
 import pages      from './pages'
 import dialogs    from './dialogs'
@@ -62,7 +65,6 @@ export default function (/* { ssrContext } */) {
                     organizationsLoader,
                     servicesLoader
                 ])
-
             },
             loadApp({commit}) {
                 return api({
@@ -75,6 +77,11 @@ export default function (/* { ssrContext } */) {
 
                     if (data.hasOwnProperty('rights')) {
                         commit('setRights', data.rights)
+                        if (data.rights.length === 0) {
+                            return Promise.reject('У вас недостаточно прав для доступа к системе')
+                        }
+                    } else {
+                        return Promise.reject('У вас недостаточно прав для доступа к системе')
                     }
 
                     commit('setIsAuthorized', true)

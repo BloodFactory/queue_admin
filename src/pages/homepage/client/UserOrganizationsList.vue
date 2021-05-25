@@ -1,6 +1,6 @@
 <template>
-    <div class="col-2">
-        <q-card>
+    <div v-if="userOrganizationsList.length > 1" class="col-2">
+        <q-card class="shadow-0" square>
             <q-list>
                 <q-item-label header align="right">Организации</q-item-label>
 
@@ -65,8 +65,9 @@ export default {
         }
     },
     mounted() {
-        if (this.userOrganizationsList.length) {
-            this.ticked = this.userOrganizationsList[0]
+        console.log(this.userOrganizationsList)
+        if (this.userOrganizationsList.length === 1) {
+            this.$emit('input', this.userOrganizationsList[0])
         }
     }
 }

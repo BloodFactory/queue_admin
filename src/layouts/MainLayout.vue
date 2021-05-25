@@ -26,7 +26,7 @@
             </q-toolbar>
         </q-header>
 
-        <q-page-container :class="darkMode && 'bg-grey-9' || 'bg-grey-4'">
+        <q-page-container :class="darkMode && 'bg-blue-grey-9' || 'bg-blue-grey-3'">
             <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
                 <router-view/>
             </transition>
@@ -57,6 +57,10 @@ export default {
                 {
                     label: 'Услуги',
                     route: 'Services'
+                },
+                {
+                    label: 'Открытые записи',
+                    route: 'Appointments'
                 }
             ]
         }

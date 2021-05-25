@@ -15,13 +15,13 @@
                     {{ item.name }}
                 </div>
                 <div class="q-px-sm text-bold text-caption rights">
-                    <q-checkbox v-model="item.view" dense/>
+                    <q-checkbox v-model="item.view" dense @input="onInputView"/>
                 </div>
                 <div class="q-px-sm text-bold text-caption rights">
-                    <q-checkbox v-model="item.edit" dense/>
+                    <q-checkbox v-model="item.edit" dense :disable="!item.view" @input="onInputEdit"/>
                 </div>
                 <div class="q-px-sm text-bold text-caption rights">
-                    <q-checkbox v-model="item.delete" dense/>
+                    <q-checkbox v-model="item.delete" dense :disable="!item.edit"/>
                 </div>
             </div>
         </q-card-section>
@@ -52,7 +52,20 @@ export default {
     },
     data() {
         return {
-            expanded: false
+            expanded: false,
+        }
+    },
+    methods: {
+        onInputView(val) {
+            if (!val) {
+                this.item.edit = false
+                this.item.delete = false
+            }
+        },
+        onInputEdit(val) {
+            if (!val) {
+                this.item.delete = false
+            }
         }
     }
 }

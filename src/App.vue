@@ -9,6 +9,8 @@
     </transition>
 </template>
 <script>
+import {Notify} from "quasar";
+
 export default {
     name: 'App',
     components: {
@@ -31,6 +33,13 @@ export default {
         const start    = new Date().getTime();
         this.isLoading = true;
         this.$store.dispatch('initApp')
+            .catch(error => {
+                Notify.create({
+                    message: error,
+                    position: 'top',
+                    type: 'negative'
+                })
+            })
             .finally(() => {
                 const finish = new Date().getTime();
                 const diff   = finish - start;

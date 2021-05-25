@@ -1,18 +1,8 @@
 <template>
-    <q-page padding>
-        <div class="row q-col-gutter-x-xl">
-            <UserOrganizationsList v-model="organization"/>
-
-            <div class="col" v-if="organization">
-                <q-card>
-                    <q-card-section>
-                        <div class="text-h5">
-                            {{ organization.label }}
-                        </div>
-                    </q-card-section>
-                </q-card>
-            </div>
-        </div>
+    <q-page>
+        <q-toolbar>
+<!--            TODO: Сделать две страницы - страницу с открытыми записями и страницу с записавшимися кандидатами. На страницах сделать фильтрыё-->
+        </q-toolbar>
     </q-page>
 </template>
 
