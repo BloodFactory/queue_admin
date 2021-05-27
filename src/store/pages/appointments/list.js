@@ -16,7 +16,10 @@ export default {
     },
     actions: {
         fetchList({commit}) {
-            Loading.show()
+            let alreadyLoading = Loading.isActive
+
+            if (!alreadyLoading)
+                Loading.show()
 
             return api({
                 url: '/appointments',
@@ -24,7 +27,8 @@ export default {
             }).then(response => {
                 commit('setList', response.data)
             }).finally(() => {
-                Loading.hide()
+                if (!alreadyLoading)
+                    Loading.hide()
             })
         }
     }

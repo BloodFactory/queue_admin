@@ -26,7 +26,7 @@
                         }"
                     >
                         <q-item-section>
-                            <q-item-label>{{ appointment.date }}</q-item-label>
+                            <q-item-label>{{ getDateString(appointment.date) }}</q-item-label>
                             <q-item-label caption>{{ appointment.organization.label }}</q-item-label>
                         </q-item-section>
                     </q-item>
@@ -41,6 +41,28 @@ export default {
     computed: {
         appointments() {
             return this.$store.getters['pages/appointment/list/getList']
+        }
+    },
+    methods: {
+        getDateString(date) {
+            const months    = [
+                'января',
+                'февраля',
+                'марта',
+                'апреля',
+                'мая',
+                'июня',
+                'июля',
+                'августа',
+                'сентября',
+                'октября',
+                'ноября',
+                'декабря'
+            ]
+            const dateArray = date.split('.')
+
+
+            return parseInt(dateArray[0]) + ' ' + months[dateArray[1] - 1]
         }
     },
     mounted() {

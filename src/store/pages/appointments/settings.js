@@ -93,7 +93,7 @@ export default {
                 commit('setPersons', appointment.persons)
             }
         },
-        saveAppointmentSettings({state}) {
+        saveAppointmentSettings({state, dispatch}) {
             Loading.show()
 
             const data = new FormData
@@ -112,10 +112,18 @@ export default {
                 data.append('dinnerTill', state.dinnerTill)
             }
 
+            let url = '/appointments'
+
+            if (state.id) {
+                url = url + '/' + state.id
+            }
+
             api({
-                url: '/appointments',
+                url,
                 method: 'POST',
                 data
+            }).then(() => {
+                return dispatch('pages/appointment/list/fetchList', null, {root: true})
             }).finally(() => {
                 Loading.hide()
             })
