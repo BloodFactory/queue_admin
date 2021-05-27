@@ -57,10 +57,6 @@ export default {
                 {
                     label: 'Услуги',
                     route: 'Services'
-                },
-                {
-                    label: 'Открытые записи',
-                    route: 'Appointments'
                 }
             ]
         }

@@ -2,6 +2,7 @@ import service            from './service'
 import organization       from './organization'
 import organizationBranch from './organizationBranch'
 import user               from './user'
+import appointment        from './appointment'
 
 export default {
     namespaced: true,
@@ -9,6 +10,7 @@ export default {
         service,
         organization,
         organizationBranch,
-        user
+        user,
+        appointment
     }
 }

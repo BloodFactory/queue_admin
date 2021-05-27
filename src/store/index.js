@@ -77,12 +77,8 @@ export default function (/* { ssrContext } */) {
 
                     if (data.hasOwnProperty('rights')) {
                         commit('setRights', data.rights)
-                        if (data.rights.length === 0) {
-                            return Promise.reject('У вас недостаточно прав для доступа к системе')
-                        }
-                    } else {
-                        return Promise.reject('У вас недостаточно прав для доступа к системе')
-                    }
+
+                    } 
 
                     commit('setIsAuthorized', true)
 

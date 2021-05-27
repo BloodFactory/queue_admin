@@ -1,20 +1,17 @@
 <template>
-    <q-page>
-        <q-toolbar>
-<!--            TODO: Сделать две страницы - страницу с открытыми записями и страницу с записавшимися кандидатами. На страницах сделать фильтрыё-->
-        </q-toolbar>
+    <q-page class="flex content-stretch full-width">
+        <div class="row col-grow">
+            <AppointmentList @change-appointment="$refs.appointmentData.resetSettings()"/>
+            <AppointmentData ref="appointmentData"/>
+        </div>
     </q-page>
 </template>
 
 <script>
 export default {
     components: {
-        UserOrganizationsList: () => import('./UserOrganizationsList')
-    },
-    data() {
-        return {
-            organization: null
-        }
+        AppointmentList: () => import('./AppointmentList'),
+        AppointmentData: () => import('./AppointmentData')
     }
 }
 </script>
