@@ -1,4 +1,16 @@
 <template>
+    <q-dialog>
+        <q-card>
+            <q-bar class="bg-light-blue-10 text-white">
+                <div class="text-bold">Настройка записи на приём</div>
+                <q-space/>
+                <q-btn
+                    icon="close"
+                    flat dense v-close-popup
+                />
+            </q-bar>
+        </q-card>
+    </q-dialog>
     <div class="q-pa-lg">
         <div class="q-mb-lg row items-center">
             <div class="text-subtitle text-bold text-grey-7 ">Настройка записи на приём</div>
@@ -219,9 +231,6 @@ export default {
         ServicePickerDialog: () => import('./ServicePickerDialog')
     },
     computed: {
-        id() {
-            return this.$store.getters['pages/appointment/settings/getId']
-        },
         organization: {
             get() {
                 return this.$store.getters['pages/appointment/settings/getOrganization']

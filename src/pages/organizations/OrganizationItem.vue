@@ -56,15 +56,13 @@
             </div>
         </q-card-section>
 
-        <template v-if="organization.branches.length > 0">
+        <template v-if="organization.branches && organization.branches.length > 0">
             <q-slide-transition>
                 <div v-show="expanded" style="padding-left: 30px;">
                     <BranchesList :branches="organization.branches"/>
                 </div>
             </q-slide-transition>
         </template>
-
-        <BranchDialog ref="branchDialog"/>
     </q-card>
 </template>
 
@@ -72,7 +70,6 @@
 export default {
     props: ['organization'],
     components: {
-        BranchDialog: () => import('./BranchDialog'),
         BranchesList: () => import('./BranchesList')
     },
     data() {

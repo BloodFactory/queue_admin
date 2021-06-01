@@ -1,17 +1,24 @@
 <template>
     <q-page class="flex content-stretch full-width">
         <div class="row col-grow">
-            <AppointmentList @change-appointment="$refs.appointmentData.resetSettings()"/>
-            <AppointmentData ref="appointmentData"/>
+            <Drawer v-model="tab"/>
+            <AppointmentData v-if="tab === 'appointments'"/>
+            <TemplateData v-if="tab === 'templates'"/>
         </div>
     </q-page>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            tab: ''
+        }
+    },
     components: {
-        AppointmentList: () => import('./AppointmentList'),
-        AppointmentData: () => import('./AppointmentData')
+        Drawer: () => import('./Drawer'),
+        AppointmentData: () => import('./AppointmentData'),
+        TemplateData: () => import('./TemplateData')
     }
 }
 </script>

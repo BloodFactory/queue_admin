@@ -5,20 +5,19 @@
         <OrganizationsList/>
 
         <OrganizationDialog/>
+        <BranchDialog/>
     </q-page>
 </template>
 
 <script>
-import ToolBar            from './ToolBar'
-import OrganizationsList  from './OrganizationsList'
-import OrganizationDialog from './OrganizationDialog'
 
 export default {
     name: "Organizations",
     components: {
-        ToolBar,
-        OrganizationsList,
-        OrganizationDialog
+        ToolBar: () => import('./ToolBar'),
+        OrganizationsList: () => import ('./OrganizationsList'),
+        OrganizationDialog: () => import('./OrganizationDialog'),
+        BranchDialog: () => import('./BranchDialog')
     }
 }
 </script>

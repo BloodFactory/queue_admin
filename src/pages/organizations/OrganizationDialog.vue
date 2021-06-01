@@ -9,6 +9,7 @@
                     flat dense v-close-popup
                 />
             </q-bar>
+
             <q-card-section>
                 <q-form ref="form" id="organizationForm" @submit.prevent="$store.dispatch('dialogs/organization/save')">
                     <q-input

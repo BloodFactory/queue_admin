@@ -34,11 +34,12 @@ export default {
         this.isLoading = true;
         this.$store.dispatch('initApp')
             .catch(error => {
-                Notify.create({
-                    message: error,
-                    position: 'top',
-                    type: 'negative'
-                })
+                if (401 !== error.response.status)
+                    Notify.create({
+                        message: error,
+                        position: 'top',
+                        type: 'negative'
+                    })
             })
             .finally(() => {
                 const finish = new Date().getTime();

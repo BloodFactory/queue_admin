@@ -59,9 +59,12 @@ export default {
 
             data.append('name', state.name)
             data.append('timezone', state.timezone.toString())
-            data.append('parent', state.organizationId.toString())
 
-            if (null !== state.id) url.push(state.id.toString())
+            if (null !== state.id) {
+                url.push(state.id.toString())
+            } else {
+                data.append('parent', state.organizationId.toString())
+            }
 
             api({
                 url: url.join('/'),

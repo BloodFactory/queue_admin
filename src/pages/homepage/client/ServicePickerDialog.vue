@@ -1,6 +1,6 @@
 <template>
-    <q-dialog ref="dialog">
-        <q-card style="min-width: 600px;">
+    <q-dialog ref="dialog" full-height>
+        <q-card class="column" style="min-width: 600px;" square>
             <q-bar class="bg-light-blue-10 text-white">
                 <div class="text-bold">Выберите услугу</div>
                 <q-space/>
@@ -10,14 +10,17 @@
                 />
             </q-bar>
 
-            <q-card-section>
-                <q-tree
-                    node-key="value"
-                    :nodes="services"
-                    :selected.sync="service"
-                    selected-color="primary"
-                    default-expand-all
-                />
+            <q-card-section class="col">
+                <q-scroll-area class="full-height">
+                    <q-tree
+                        node-key="value"
+                        :nodes="services"
+                        :ticked.sync="ticked"
+                        tick-strategy="strict"
+                        selected-color="primary"
+                        default-expand-all
+                    />
+                </q-scroll-area>
             </q-card-section>
 
             <q-separator/>
@@ -31,33 +34,16 @@
 
 <script>
 export default {
-    props: ['value'],
     computed: {
         services() {
             return this.$store.getters['dictionary/services/getOptions']
         },
-        service: {
+        ticked: {
             get() {
-                return this.value && this.value.value || null
+                return this.$store.getters['dialogs/appointmentTemplate/getServices']
             },
-            set(value) {
-                const services = this.services
-
-                function getSelectedService(services) {
-                    for (let service of services) {
-                        if (value === service.value) return service
-
-                        if (service.children) {
-                            const innerResult = getSelectedService(service.children)
-
-                            if (innerResult) return innerResult
-                        }
-                    }
-
-                    return null
-                }
-
-                this.$emit('input', getSelectedService(services))
+            set(ticked) {
+                this.$store.commit('dialogs/appointmentTemplate/setServices', ticked)
             }
         }
     },
