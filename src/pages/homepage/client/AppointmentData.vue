@@ -1,13 +1,26 @@
 <template>
     <div class="col bg-white">
-        <AppointmentRecords/>
+        <div v-if="null === id">
+            <p>Не выбрана запись на приём</p>
+        </div>
+        <div v-else>
+            <AppointmentParameters/>
+            <q-separator/>
+            <AppointmentRecords/>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
     components: {
-        AppointmentRecords: () => import('./AppointmentRecords')
+        AppointmentRecords: () => import('./AppointmentRecords'),
+        AppointmentParameters: () => import('./AppointmentParameters')
+    },
+    computed: {
+        id() {
+            return this.$store.getters['pages/appointment/appointment/getId']
+        },
     }
 }
 </script>

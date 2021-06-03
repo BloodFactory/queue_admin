@@ -1,7 +1,8 @@
-import settings  from './settings'
-import list      from './list'
-import templates from './templates.js'
-import template  from './template'
+import settings    from './settings'
+import list        from './list'
+import templates   from './templates.js'
+import template    from './template'
+import appointment from './appointment'
 
 export default {
     namespaced: true,
@@ -9,6 +10,7 @@ export default {
         settings,
         list,
         templates,
-        template
+        template,
+        appointment
     }
 }

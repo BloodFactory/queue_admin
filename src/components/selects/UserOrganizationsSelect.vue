@@ -6,7 +6,9 @@
         :dense="dense"
         :outlined="outlined"
         class="no-border-radius"
-        multiple use-chips square
+        :multiple="multiple"
+        :use-chips="useChips"
+        square
         @input="val => { $emit('input', val) }"
     />
 </template>
@@ -39,6 +41,15 @@ export default {
                 'user.view',
                 'user.edit',
             ].includes(val)
+        },
+        multiple: {
+            type: Boolean,
+            default: false
+        },
+        useChips: {
+            type: Boolean,
+            default: false
+
         }
     },
     computed: {
