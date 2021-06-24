@@ -5,16 +5,16 @@
         <ServicesList/>
 
         <ServicesDialog/>
+        <ServiceGroupDialog/>
     </q-page>
 </template>
 
 <script>
-import ToolBar from './ToolBar'
-
 export default {
     components: {
-        ToolBar,
+        ToolBar: () => import ('./ToolBar'),
         ServicesList: () => import('./ServicesList'),
+        ServiceGroupDialog: () => import('./ServiceGroupDialog'),
         ServicesDialog: () => import('./ServiceDialog')
     }
 }

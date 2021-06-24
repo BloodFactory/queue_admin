@@ -36,13 +36,49 @@
 export default {
     computed: {
         services() {
-            return this.$store.getters['dictionary/services/getOptions']
+            const services = this.$store.getters['services/getServices']
+
+            function parseItem(item) {
+                if (!item.hasOwnProperty('children') && !item.hasOwnProperty('services')) {
+                    return []
+                }
+
+                const result = [];
+
+                if (item.hasOwnProperty('services')) {
+                    for (let service of item.services) {
+                        result.push({
+                            value: service.id,
+                            label: service.name
+                        })
+                    }
+                }
+
+                if (item.hasOwnProperty('children')) {
+                    for (let child of item.children) {
+                        const newItem = {
+                            value: child.id,
+                            label: child.name,
+                            noTick: true
+                        }
+
+                        newItem.children = parseItem(child)
+
+                        result.push(newItem)
+                    }
+                }
+
+                return result
+            }
+
+            return parseItem(services)
         },
         ticked: {
             get() {
                 return this.$store.getters['dialogs/appointmentTemplate/getServices']
             },
             set(ticked) {
+                console.log(ticked)
                 this.$store.commit('dialogs/appointmentTemplate/setServices', ticked)
             }
         }

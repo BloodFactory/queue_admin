@@ -42,11 +42,11 @@ export default {
 
                 for (let organization of organizations) {
                     let item = {
-                        value: organization.value,
-                        name: organization.label,
-                        view: user.rights[organization.value] ? user.rights[organization.value]['view'] : false,
-                        edit: user.rights[organization.value] ? user.rights[organization.value]['edit'] : false,
-                        delete: user.rights[organization.value] ? user.rights[organization.value]['delete'] : false,
+                        value: organization.id,
+                        name: organization.name,
+                        view: user.rights[organization.id] ? user.rights[organization.id]['view'] : false,
+                        edit: user.rights[organization.id] ? user.rights[organization.id]['edit'] : false,
+                        delete: user.rights[organization.id] ? user.rights[organization.id]['delete'] : false,
                     }
 
                     if (organization.hasOwnProperty('branches') && organization.branches.length > 0) {
@@ -61,7 +61,7 @@ export default {
 
             this.user = user
 
-            const organizations = this.$store.getters['dictionary/organizations/getOptions']
+            const organizations = this.$store.getters['organizations/getOrganizations']
 
             this.rights = getRights(organizations)
 

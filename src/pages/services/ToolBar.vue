@@ -20,16 +20,36 @@
                 </div>
             </div>
 
-
-            <q-btn
-                v-if="$can('add', 'Services')"
-                label="Добавить"
-                icon="mdi-plus"
+            <q-btn-dropdown
                 color="purple"
-                class="no-border-radius"
+                label="Добавить"
                 unelevated
-                @click="$store.dispatch('dialogs/service/open')"
-            />
+                class="no-border-radius"
+            >
+                <q-list>
+                    <q-item clickable v-close-popup @click="$store.dispatch('dialogs/service/open')">
+                        <q-item-section>
+                            <q-item-label>Услугу (вне группы)</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-close-popup @click="$store.dispatch('dialogs/serviceGroup/open')">
+                        <q-item-section>
+                            <q-item-label>Корневую группу услуг</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </q-list>
+            </q-btn-dropdown>
+
+<!--            <q-btn-->
+<!--                v-if="$can('add', 'Services')"-->
+<!--                label="Добавить"-->
+<!--                icon="mdi-plus"-->
+<!--                color="purple"-->
+<!--                class="no-border-radius"-->
+<!--                unelevated-->
+<!--                @click="$store.dispatch('dialogs/service/open')"-->
+<!--            />-->
 
             <q-btn
                 label="Обновить"

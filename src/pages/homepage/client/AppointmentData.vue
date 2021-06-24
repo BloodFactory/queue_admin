@@ -5,7 +5,6 @@
         </div>
         <div v-else>
             <AppointmentParameters/>
-            <q-separator/>
             <AppointmentRecords/>
         </div>
     </div>

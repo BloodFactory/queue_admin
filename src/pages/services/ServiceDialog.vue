@@ -1,6 +1,6 @@
 <template>
-    <q-dialog v-model="dialog" persistent>
-        <q-card style="width: 400px">
+    <q-dialog v-model="dialog">
+        <q-card style="min-width: 600px" square>
             <q-bar class="bg-light-blue-10 text-white">
                 <div class="text-bold">Услуга</div>
                 <q-space/>
@@ -15,8 +15,7 @@
                     <q-input
                         label="Название"
                         v-model="name"
-                        clearable
-                        outlined
+                        clearable outlined square dense
                     />
                 </q-form>
             </q-card-section>
@@ -52,7 +51,7 @@ export default {
         },
         parent: {
             get() {
-                return this.$store.getters['dialogs/service/getParent']
+                return this.$store.getters['dialogs/service/getGroupId']
             },
             set(parent) {
                 this.$store.commit('dialogs/service/setParent', parent)

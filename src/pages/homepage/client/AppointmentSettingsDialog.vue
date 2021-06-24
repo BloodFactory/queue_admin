@@ -123,7 +123,7 @@
                         :rules="[
                             v => !!v || 'Выберите время окончания приёма физических лиц',
                             v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
-                            ]"
+                        ]"
                         outlined dense lazy-rules="ondemand"
                     >
                         <template v-slot:append>
@@ -156,7 +156,7 @@
                         :rules="[
                             v => (!needDinner || needDinner && !!v) || 'Выберите время начала перерыва на обед',
                             v => (!needDinner || needDinner && /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v)) || 'Неверное время'
-                            ]"
+                        ]"
                         outlined dense lazy-rules="ondemand"
                     >
                         <template v-slot:append>
@@ -183,7 +183,7 @@
                         :rules="[
                             v => (!needDinner || needDinner && !!v) || 'Выберите время окончания перерыва на обед',
                             v => (!needDinner || needDinner && /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v)) || 'Неверное время'
-                            ]"
+                        ]"
                         outlined dense lazy-rules="ondemand"
                     >
                         <template v-slot:append>

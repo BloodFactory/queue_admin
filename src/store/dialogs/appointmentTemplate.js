@@ -7,7 +7,7 @@ export default {
         dialog: false,
         organizations: [],
         services: [],
-        timeForm: '',
+        timeFrom: '',
         timeTill: '',
         needDinner: false,
         dinnerFrom: '',
@@ -38,7 +38,7 @@ export default {
             state.services = services
         },
         setTimeFrom(state, timeFrom) {
-            state.timeForm = timeFrom
+            state.timeFrom = timeFrom
         },
         setTimeTill(state, timeTill) {
             state.timeTill = timeTill
@@ -61,9 +61,18 @@ export default {
     },
     actions: {
         show({commit}) {
+            commit('setOrganizations', [])
+            commit('setServices', [])
+            commit('setTimeFrom', '')
+            commit('setTimeTill', '')
+            commit('setDinnerFrom', '')
+            commit('setDinnerTill', '')
+            commit('setNeedDinner', false)
+            commit('setPersons', 0)
+            commit('setDuration', 0)
             commit('setDialog', true)
         },
-        save({state, dispatch}) {
+        save({state, commit, dispatch}) {
             Loading.show()
 
             const data = new FormData
@@ -94,6 +103,9 @@ export default {
                 data
             }).then(response => {
                 return dispatch('pages/appointment/templates/fetchList', null, {root: true})
+            }).then(() => {
+                commit('setDialog', false)
+                return Promise.resolve()
             }).finally(() => {
                 Loading.hide()
             })

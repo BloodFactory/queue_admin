@@ -33,15 +33,47 @@
                         <q-input
                             label="Начало приёма"
                             v-model="timeFrom"
+                            mask="##:##"
+                            :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                             outlined square
-                        />
+                        >
+                            <template v-slot:append>
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="timeFrom">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat/>
+                                            </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
                     </div>
                     <div class="col-6">
                         <q-input
                             label="Конец приёма"
                             v-model="timeTill"
+                            mask="##:##"
+                            :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                             outlined square
-                        />
+                        >
+                            <template v-slot:append>
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="timeFrom">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat/>
+                                            </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
                     </div>
                     <div class="col-2">
                         <q-checkbox
@@ -53,21 +85,58 @@
                         <q-input
                             label="Начало обеда"
                             v-model="dinnerFrom"
+                            mask="##:##"
+                            :disable="!needDinner"
+                            :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                             outlined square
-                        />
+                        >
+                            <template v-slot:append>
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="timeFrom">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat/>
+                                            </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
                     </div>
                     <div class="col-5">
                         <q-input
                             label="Конец обеда"
                             v-model="dinnerTill"
+                            mask="##:##"
+                            :disable="!needDinner"
+                            :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                             outlined square
-                        />
+                        >
+                            <template v-slot:append>
+                                <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="timeFrom">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat/>
+                                            </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                </q-icon>
+                            </template>
+                        </q-input>
                     </div>
 
                     <div class="col-6">
                         <q-input
                             label="Количество вакантных мест на один приём"
                             v-model="persons"
+                            :rules="[
+                                    v => !!v && !isNaN(v) && Number.isInteger(Number(v)) || 'Введите целое число'
+                                ]"
                             outlined square
                         />
                     </div>
@@ -75,6 +144,9 @@
                         <q-input
                             label="Длительность одного приёма (в минутах)"
                             v-model="duration"
+                            :rules="[
+                                    v => !!v && !isNaN(v) && Number.isInteger(Number(v)) || 'Введите целое число'
+                                ]"
                             outlined square
                         />
                     </div>

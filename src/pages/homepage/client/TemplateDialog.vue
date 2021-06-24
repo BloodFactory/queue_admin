@@ -57,6 +57,9 @@
                                 v-model="timeFrom"
                                 label="Начало приёма"
                                 mask="##:##"
+                                :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                                 outlined dense square
                             >
                                 <template v-slot:append>
@@ -77,6 +80,9 @@
                                 v-model="timeTill"
                                 label="Конец приёма"
                                 mask="##:##"
+                                :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                                 outlined dense square
                             >
                                 <template v-slot:append>
@@ -104,6 +110,9 @@
                                 label="Начало перерыва на обед"
                                 mask="##:##"
                                 :disable="!needDinner"
+                                :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                                 outlined dense square
                             >
                                 <template v-slot:append>
@@ -125,6 +134,9 @@
                                 label="Конец перерыва на обед"
                                 mask="##:##"
                                 :disable="!needDinner"
+                                :rules="[
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                                 outlined dense square
                             >
                                 <template v-slot:append>
@@ -144,6 +156,9 @@
                             <q-input
                                 label="Количество вакантных мест на один приём"
                                 v-model="persons"
+                                :rules="[
+                                    v => !!v && !isNaN(v) && Number.isInteger(Number(v)) || 'Введите целое число'
+                                ]"
                                 dense outlined square
                             />
                         </div>
@@ -151,6 +166,9 @@
                             <q-input
                                 label="Длительность одного приёма (в минутах)"
                                 v-model="duration"
+                                :rules="[
+                                    v => !!v && !isNaN(v) && Number.isInteger(Number(v)) || 'Введите целое число'
+                                ]"
                                 dense outlined square
                             />
                         </div>
@@ -194,28 +212,32 @@ export default {
             }
         },
         services() {
-            const store    = this.$store
-            const services = store.getters['dictionary/services/getOptions']
-            const result   = []
+            const store          = this.$store
+            const services       = store.getters['services/getServices']
+            const tickedServices = store.getters['dialogs/appointmentTemplate/getServices']
+            const result         = []
 
-            function getSelectedServices(services) {
-                for (let service of services) {
-                    if (store.getters['dialogs/appointmentTemplate/getServices'].includes(service.value)) {
-                        result.push({
-                            value: service.value,
-                            label: service.label
-                        })
+            function getSelectedServices(item) {
+                if (item.hasOwnProperty('services')) {
+                    for (let service of item.services) {
+                        if (tickedServices.includes(service.id)) {
+                            result.push({
+                                value: service.id,
+                                label: service.name
+                            })
+                        }
                     }
+                }
 
-                    if (service.children && service.children.length > 0) {
-                        getSelectedServices(service.children)
+                if (item.hasOwnProperty('children')) {
+                    for (let child of item.children) {
+                        getSelectedServices(child)
                     }
                 }
             }
 
             getSelectedServices(services)
 
-            // return this.$store.getters['dialogs/appointmentTemplate/getServices']
             return result
         },
         timeFrom: {
@@ -230,8 +252,8 @@ export default {
             get() {
                 return this.$store.getters['dialogs/appointmentTemplate/getTimeTill']
             },
-            set(timeFrom) {
-                this.$store.commit('dialogs/appointmentTemplate/setTimeTill', timeFrom)
+            set(timeTill) {
+                this.$store.commit('dialogs/appointmentTemplate/setTimeTill', timeTill)
             }
         },
         needDinner: {
@@ -273,6 +295,28 @@ export default {
             set(duration) {
                 this.$store.commit('dialogs/appointmentTemplate/setDuration', duration)
             }
+        },
+        options() {
+            const organizations = this.$store.getters['organizations/getOrganizations']
+            const rights        = this.$store.getters['getRights']
+
+            const result = []
+
+            for (let {name, id, branches} of organizations) {
+                if ('all' === this.scope) result.push({label: name, value: id})
+                if ('user.view' === this.scope && rights[id] && rights[id].view) result.push({label: name, value: id})
+                if ('user.edit' === this.scope && rights[id] && rights[id].edit) result.push({label: name, value: id})
+
+                if (branches) {
+                    for (let {name, id} of branches) {
+                        if ('all' === this.scope) result.push({label: name, value: id})
+                        if ('user.view' === this.scope && rights[id] && rights[id].view) result.push({label: name, value: id})
+                        if ('user.edit' === this.scope && rights[id] && rights[id].edit) result.push({label: name, value: id})
+                    }
+                }
+            }
+
+            return result
         }
     }
 }

@@ -10,6 +10,9 @@
         :use-chips="useChips"
         square
         @input="val => { $emit('input', val) }"
+        :rules="[
+            v => (multiple && Array.isArray(v) && v.length) || !!v || 'Выберите организацию(и)'
+        ]"
     />
 </template>
 
@@ -54,21 +57,21 @@ export default {
     },
     computed: {
         options() {
-            const organizations = this.$store.getters['dictionary/organizations/getOptions']
+            const organizations = this.$store.getters['organizations/getOrganizations']
             const rights        = this.$store.getters['getRights']
 
             const result = []
 
-            for (let {label, value, branches} of organizations) {
-                if ('all' === this.scope) result.push({label, value})
-                if ('user.view' === this.scope && rights[value] && rights[value].view) result.push({label, value})
-                if ('user.edit' === this.scope && rights[value] && rights[value].edit) result.push({label, value})
+            for (let {name, id, branches} of organizations) {
+                if ('all' === this.scope) result.push({label: name, value: id})
+                if ('user.view' === this.scope && rights[id] && rights[id].view) result.push({label: name, value: id})
+                if ('user.edit' === this.scope && rights[id] && rights[id].edit) result.push({label: name, value: id})
 
                 if (branches) {
-                    for (let {label, value} of branches) {
-                        if ('all' === this.scope) result.push({label, value})
-                        if ('user.view' === this.scope && rights[value] && rights[value].view) result.push({label, value})
-                        if ('user.edit' === this.scope && rights[value] && rights[value].edit) result.push({label, value})
+                    for (let {name, id} of branches) {
+                        if ('all' === this.scope) result.push({label: name, value: id})
+                        if ('user.view' === this.scope && rights[id] && rights[id].view) result.push({label: name, value: id})
+                        if ('user.edit' === this.scope && rights[id] && rights[id].edit) result.push({label: name, value: id})
                     }
                 }
             }

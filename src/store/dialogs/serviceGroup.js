@@ -1,64 +1,65 @@
-import {api}     from 'boot/axios'
-import {Loading} from 'quasar'
+import {Loading} from "quasar";
+import {api}     from "boot/axios";
 
 export default {
     namespaced: true,
     state: {
         dialog: false,
         id: null,
-        groupId: null,
         name: '',
+        parent: null
     },
     getters: {
         getDialog: state => state.dialog,
-        getName: state => state.name,
         getId: state => state.id,
-        getGroupId: state => state.groupId
+        getName: state => state.name
     },
     mutations: {
-        setDialog: (state, dialog) => {
+        setDialog(state, dialog) {
             state.dialog = dialog
         },
-        setName: (state, name) => {
-            state.name = name
-        },
-        setId: (state, id) => {
+        setId(state, id) {
             state.id = id
         },
-        setGroupId: (state, groupId) => {
-            state.groupId = groupId
+        setName(state, name) {
+            state.name = name
+        },
+        setParent(state, parent) {
+            state.parent = parent
         }
     },
     actions: {
         open({commit}, props = null) {
             commit('setId', null)
             commit('setName', '')
+            commit('setParent', null)
 
-            if (props && props.service) {
-                const {id, name} = props.service
+            if (props && props.serviceGroup) {
+                const {id, name} = props.serviceGroup
 
                 commit('setId', id)
                 commit('setName', name)
             }
 
-            if (props && props.groupId) {
-                commit('setGroupId', props.groupId)
+            if (props && props.parent) {
+                commit('setParent', props.parent)
             } else {
-                commit('setGroupId', null)
+                commit('setParent', null)
             }
 
             commit('setDialog', true)
         },
+
         save({state, commit, dispatch}) {
             Loading.show()
 
-            const url  = ['/services']
+            const url  = ['/servicesGroups']
             const data = new FormData
 
             data.append('name', state.name)
 
             if (null !== state.id) url.push(state.id.toString())
-            if (null !== state.groupId) data.append('serviceGroupId', state.groupId)
+            if (null !== state.parent) data.append('parent', state.parent)
 
             api({
                 url: url.join('/'),

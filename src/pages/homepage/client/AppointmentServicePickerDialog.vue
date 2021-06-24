@@ -35,7 +35,42 @@
 export default {
     computed: {
         services() {
-            return this.$store.getters['dictionary/services/getOptions']
+            const services = this.$store.getters['services/getServices']
+
+            function parseItem(item) {
+                if (!item.hasOwnProperty('children') && !item.hasOwnProperty('services')) {
+                    return []
+                }
+
+                const result = [];
+
+                if (item.hasOwnProperty('services')) {
+                    for (let service of item.services) {
+                        result.push({
+                            value: service.id,
+                            label: service.name,
+                            selectable: true
+                        })
+                    }
+                }
+
+                if (item.hasOwnProperty('children')) {
+                    for (let child of item.children) {
+                        const newItem = {
+                            value: child.id,
+                            label: child.name
+                        }
+
+                        newItem.children = parseItem(child)
+
+                        result.push(newItem)
+                    }
+                }
+
+                return result
+            }
+
+            return parseItem(services)
         },
         selected: {
             get() {

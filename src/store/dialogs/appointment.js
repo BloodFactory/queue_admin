@@ -81,7 +81,7 @@ export default {
             commit('setService', template.service.id)
             commit('setOrganization', organization)
         },
-        save({state}) {
+        save({state, commit, dispatch}) {
             Loading.show()
 
             const data = new FormData
@@ -105,6 +105,11 @@ export default {
                 url: '/appointments',
                 method: 'post',
                 data
+            }).then(() => {
+                commit('setDialog', false)
+                return Promise.resolve()
+            }).then(() => {
+                dispatch('pages/appointment/list/fetchList', null, {root: true})
             }).finally(() => {
                 Loading.hide()
             })

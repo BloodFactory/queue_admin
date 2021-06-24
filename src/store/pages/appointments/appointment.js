@@ -86,6 +86,7 @@ export default {
                 commit('setPersons', '')
                 commit('setOrganization', null)
                 commit('setService', null)
+                commit('setRegistrations', [])
             } else {
                 commit('setId', appointment.id)
                 commit('setDate', appointment.date)
@@ -104,6 +105,7 @@ export default {
                     value: service.id,
                     label: service.name,
                 })
+                commit('setRegistrations', appointment.registrations)
             }
         },
 

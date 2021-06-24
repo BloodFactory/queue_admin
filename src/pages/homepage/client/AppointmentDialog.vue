@@ -1,6 +1,6 @@
 <template>
     <q-dialog v-model="dialog">
-        <q-card style="min-width: 900px">
+        <q-card style="min-width: 900px" square10>
             <q-bar class="bg-light-blue-10 text-white">
                 <div class="text-bold">Открытие записи на приём</div>
                 <q-space/>
@@ -18,12 +18,16 @@
                             v-model="date"
                             style="flex: 1"
                             mask="##.##.####"
+                            :rules="[
+                                v => !!v || 'Выберите дату',
+                                v => /^[0-3]\d\.[0-1]\d.[\d]+$/.test(v) || 'Неверная дата'
+                            ]"
                             outlined dense square
                         >
                             <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="date" mask="DD.MM.YYYY">
+                                        <q-date v-model="date" mask="DD.MM.YYYY" :locale="calendar">
                                             <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat/>
                                             </div>
@@ -32,7 +36,7 @@
                                 </q-icon>
                             </template>
                         </q-input>
-                        <div class="flex">
+                        <div class="flex content-start">
                             <q-btn
                                 label="Заполнить из шаблона"
                                 color="purple"
@@ -53,7 +57,7 @@
                         </div>
                         <div class="col-6">
                             <q-btn
-                                :label="'Услуга' + (null !== service && (': ' + service.label) || '')"
+                                :label="'Услуга' + (null !== service && (': ' + service.name) || '')"
                                 class="full-width no-border-radius"
                                 outline no-caps
                                 @click="$refs.appointmentServicePickerDialog.show()"
@@ -65,6 +69,10 @@
                                 v-model="timeFrom"
                                 mask="##:##"
                                 label="Начало приёма"
+                                :rules="[
+                                    v => !!v || 'Выберите время начала приёма физических лиц',
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                                 square outlined dense
                             >
                                 <template v-slot:append>
@@ -84,6 +92,11 @@
                             <q-input
                                 v-model="timeTill"
                                 label="Конец приёма"
+                                mask="##:##"
+                                :rules="[
+                                    v => !!v || 'Выберите время окончания приёма физических лиц',
+                                    v => /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v) || 'Неверное время'
+                                ]"
                                 square outlined dense
                             >
                                 <template v-slot:append>
@@ -112,6 +125,10 @@
                                 mask="##:##"
                                 label="Начало обеда"
                                 :disable="!needDinner"
+                                :rules="[
+                                    v => (!needDinner || needDinner && !!v) || 'Выберите время начала перерыва на обед',
+                                    v => (!needDinner || needDinner && /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v)) || 'Неверное время'
+                                ]"
                                 square outlined dense
                             >
                                 <template v-slot:append>
@@ -133,6 +150,10 @@
                                 v-model="dinnerTill"
                                 mask="##:##"
                                 :disable="!needDinner"
+                                :rules="[
+                                    v => (!needDinner || needDinner && !!v) || 'Выберите время окончания перерыва на обед',
+                                    v => (!needDinner || needDinner && /^([0-1]?\d|2[0-3]):[0-5]\d$/.test(v)) || 'Неверное время'
+                                ]"
                                 square outlined dense
                             >
                                 <template v-slot:append>
@@ -153,6 +174,7 @@
                             <q-input
                                 label="Длительность приёма (в минутах)"
                                 v-model="duration"
+                                :rules="[v => !!v || 'Введите длительность одного приёма в минутах']"
                                 square outlined dense
                             />
                         </div>
@@ -160,6 +182,7 @@
                             <q-input
                                 label="Количество вакантных мест на один приём"
                                 v-model="persons"
+                                :rules="[v => !!v || 'Введите число вакантнах мест на один приём']"
                                 square outlined dense
                             />
                         </div>
@@ -181,11 +204,18 @@
 </template>
 
 <script>
+import {calendar} from 'src/helpers/locale'
+
 export default {
     components: {
         UserOrganizationsSelect: () => import('components/selects/UserOrganizationsSelect'),
         AppointmentServicePickerDialog: () => import('./AppointmentServicePickerDialog'),
         FillFromTemplateDialog: () => import('./FillFromTemplateDialog')
+    },
+    data() {
+        return {
+            calendar
+        }
     },
     computed: {
         dialog: {
@@ -214,24 +244,30 @@ export default {
         },
         service() {
             const serviceID = this.$store.getters['dialogs/appointment/getService']
-            const services  = this.$store.getters['dictionary/services/getOptions']
+            const services  = this.$store.getters['services/getServices']
 
             if (null === serviceID) return null
 
-            const result = getService(services)
+            const a = getService(services)
 
-            return result
+            console.log(serviceID)
+            return getService(services)
 
-            function getService(services) {
-                for (let service of services) {
-                    if (service.value === serviceID) return service
+            function getService(item) {
+                if (item.hasOwnProperty('services')) {
+                    for (let service of item.services) {
+                        if (service.id === serviceID) return service
+                    }
+                }
 
-                    if (service.hasOwnProperty('children')) {
-                        let serv = getService(service.children)
+                if (item.hasOwnProperty('children')) {
+                    for (let child of item.children) {
+                        let serv = getService(child)
 
                         if (serv) return serv
                     }
                 }
+
                 return null
             }
         },
@@ -294,9 +330,7 @@ export default {
     },
     methods: {
         save() {
-            this.$store.dispatch('dialogs/appointment/save').then(() => {
-                this.dialog = false
-            })
+            this.$store.dispatch('dialogs/appointment/save')
         }
     }
 }

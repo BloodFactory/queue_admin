@@ -40,13 +40,14 @@ export default {
             }
         },
         options() {
-            if (this.parent) {
-                for (let organization of this.$store.getters['dictionary/organizations/getOptions']) {
-                    if (this.parent === organization.id && organization.hasOwnProperty('branches')) return organization.branches;
-                }
-            }
-
-            return this.$store.getters['dictionary/organizations/getOptions'];
+            return []
+            // if (this.parent) {
+            //     for (let organization of this.$store.getters['organizations/getOrganizations']) {
+            //         if (this.parent === organization.id && organization.hasOwnProperty('branches')) return organization.branches;
+            //     }
+            // }
+            //
+            // return this.$store.getters['organizations/getOrganizations'];
         }
     }
 }

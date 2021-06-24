@@ -1,24 +1,23 @@
-import Vue        from 'vue'
-import Vuex       from 'vuex'
-import {api}      from 'boot/axios'
-import ability    from 'src/helpers/ability'
-import security   from 'src/helpers/security'
-import {
-    Dark,
-    Notify
-}                 from 'quasar'
-import dictionary from './dictionaries'
-import pages      from './pages'
-import dialogs    from './dialogs'
+import Vue           from 'vue'
+import Vuex          from 'vuex'
+import {api}         from 'boot/axios'
+import ability       from 'src/helpers/ability'
+import security      from 'src/helpers/security'
+import {Dark}        from 'quasar'
+import pages         from './pages'
+import dialogs       from './dialogs'
+import services      from './services'
+import organizations from './organizations';
 
 Vue.use(Vuex)
 
 export default function (/* { ssrContext } */) {
     const Store = new Vuex.Store({
         modules: {
-            dictionary,
             pages,
-            dialogs
+            dialogs,
+            services,
+            organizations
         },
 
         state: {
@@ -57,8 +56,8 @@ export default function (/* { ssrContext } */) {
 
                 let appLoader = dispatch('loadApp')
 
-                let organizationsLoader = dispatch('dictionary/organizations/fetchOptions')
-                let servicesLoader      = dispatch('dictionary/services/fetchOptions')
+                let organizationsLoader = dispatch('organizations/fetch')
+                let servicesLoader      = dispatch('services/fetch')
 
                 return Promise.all([
                     appLoader,
@@ -78,7 +77,7 @@ export default function (/* { ssrContext } */) {
                     if (data.hasOwnProperty('rights')) {
                         commit('setRights', data.rights)
 
-                    } 
+                    }
 
                     commit('setIsAuthorized', true)
 
