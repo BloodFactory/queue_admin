@@ -78,7 +78,6 @@ export default {
                 return this.$store.getters['dialogs/appointmentTemplate/getServices']
             },
             set(ticked) {
-                console.log(ticked)
                 this.$store.commit('dialogs/appointmentTemplate/setServices', ticked)
             }
         }
