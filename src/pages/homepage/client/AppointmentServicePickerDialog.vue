@@ -57,8 +57,9 @@ export default {
                 if (item.hasOwnProperty('children')) {
                     for (let child of item.children) {
                         const newItem = {
-                            value: child.id,
-                            label: child.name
+                            value: 'group_' + child.id,
+                            label: child.name,
+                            selectable: false
                         }
 
                         newItem.children = parseItem(child)
