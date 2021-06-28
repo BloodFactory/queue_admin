@@ -27,9 +27,9 @@
                             <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="date" mask="DD.MM.YYYY" :locale="calendar">
+                                        <q-date v-model="date" mask="DD.MM.YYYY" :locale="calendar" first-day-of-week="1">
                                             <div class="row items-center justify-end">
-                                                <q-btn v-close-popup label="Close" color="primary" flat/>
+                                                <q-btn v-close-popup label="Закрыть" color="primary" flat/>
                                             </div>
                                         </q-date>
                                     </q-popup-proxy>
@@ -248,9 +248,6 @@ export default {
 
             if (null === serviceID) return null
 
-            const a = getService(services)
-
-            console.log(serviceID)
             return getService(services)
 
             function getService(item) {

@@ -69,7 +69,6 @@ export default {
             commit('setDialog', true)
         },
         set({commit}, {template, organization}) {
-            // console.log(template)
             commit('setTimeFrom', template.timeFrom)
             commit('setTimeTill', template.timeTill)
             commit('setNeedDinner', template.needDinner)

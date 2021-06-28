@@ -159,6 +159,21 @@ export default {
                     Loading.hide()
                 })
             })
+        },
+
+        fetchRegistrations({state, commit}) {
+            const data = new FormData
+
+            data.append('appointmentID', state.id)
+
+            return api({
+                url: '/registrations',
+                method: 'get',
+                data
+            }).then(response => {
+                commit('setRegistrations', response.data)
+                return Promise.resolve()
+            })
         }
     }
 }

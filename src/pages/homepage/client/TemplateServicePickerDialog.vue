@@ -70,7 +70,7 @@ export default {
 
                 return result
             }
-console.log(this.$q.version)
+
             return parseItem(services)
         },
         ticked: {
