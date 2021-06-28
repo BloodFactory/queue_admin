@@ -57,7 +57,7 @@ export default {
                 if (item.hasOwnProperty('children')) {
                     for (let child of item.children) {
                         const newItem = {
-                            value: child.id,
+                            value: 'group_' + child.id,
                             label: child.name,
                             noTick: true
                         }
@@ -70,7 +70,7 @@ export default {
 
                 return result
             }
-
+console.log(this.$q.version)
             return parseItem(services)
         },
         ticked: {
