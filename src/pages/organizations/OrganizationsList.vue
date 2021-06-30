@@ -17,16 +17,38 @@ export default {
     },
     computed: {
         organizations() {
-            return this.$store.getters['pages/organizations/getOrganizations']
-        }
-    },
-    mounted() {
-        if (null === this.$store.getters['pages/organizations/getOrganizations']) {
-            this.$q.loading.show()
+            const filter        = this.$store.getters['pages/organizations/getFilter']
+            const organizations = this.$store.getters['organizations/getOrganizations']
 
-            this.$store.dispatch('pages/organizations/fetchOrganizations').then(() => {
-                this.$q.loading.hide()
-            })
+            if (!filter) return organizations
+
+            const filteredOrganizations = []
+
+            for (let organization of organizations) {
+                if (organization.name.includes(filter)) {
+                    filteredOrganizations.push(organization)
+                    continue
+                }
+
+                const filteredBranches = []
+
+                if (organization.hasOwnProperty('branches') && organization.branches.length) {
+                    for (let branch of organization.branches) {
+                        if (branch.name.includes(filter)) {
+                            filteredBranches.push(branch)
+                        }
+                    }
+                }
+
+                if (filteredBranches.length) {
+                    const newOrganization = {}
+                    Object.assign(newOrganization, organization)
+                    newOrganization.branches = filteredBranches
+                    filteredOrganizations.push(newOrganization)
+                }
+            }
+
+            return filteredOrganizations
         }
     }
 }

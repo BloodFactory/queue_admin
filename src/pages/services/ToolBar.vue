@@ -5,18 +5,16 @@
 
             <div class="row q-mx-xl q-gutter-x-md" style="width: 100%; flex: 1 0">
                 <div style="width: 100%; flex: 1 0">
-                    <q-form>
-                        <q-input
-                            v-model.trim="filter"
-                            class="q-px-md no-border-radius bg-grey-3"
-                            debounce="500"
-                            dense borderless clearable
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-magnify"/>
-                            </template>
-                        </q-input>
-                    </q-form>
+                    <q-input
+                        v-model="filter"
+                        class="q-px-md no-border-radius bg-grey-3"
+                        debounce="500"
+                        dense borderless clearable
+                    >
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-magnify"/>
+                        </template>
+                    </q-input>
                 </div>
             </div>
 
@@ -40,16 +38,6 @@
                     </q-item>
                 </q-list>
             </q-btn-dropdown>
-
-<!--            <q-btn-->
-<!--                v-if="$can('add', 'Services')"-->
-<!--                label="Добавить"-->
-<!--                icon="mdi-plus"-->
-<!--                color="purple"-->
-<!--                class="no-border-radius"-->
-<!--                unelevated-->
-<!--                @click="$store.dispatch('dialogs/service/open')"-->
-<!--            />-->
 
             <q-btn
                 label="Обновить"
@@ -75,8 +63,6 @@ export default {
             },
             set(filter) {
                 this.$store.commit('pages/services/setFilter', filter)
-
-                this.reset()
             }
         }
     }

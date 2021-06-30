@@ -45,7 +45,7 @@
                                 <q-item-section>Редактировать</q-item-section>
                             </q-item>
                             <q-separator/>
-                            <q-item clickable v-close-popup @click="deleteItem">
+                            <q-item clickable v-close-popup @click="deleteItem" :disable="item.services.length || item.children.length">
                                 <q-item-section avatar>
                                     <q-icon name="delete"/>
                                 </q-item-section>

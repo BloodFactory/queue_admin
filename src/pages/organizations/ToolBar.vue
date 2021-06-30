@@ -5,18 +5,16 @@
 
             <div class="row q-mx-xl q-gutter-x-md" style="width: 100%; flex: 1 0">
                 <div style="width: 100%; flex: 1 0">
-                    <q-form>
-                        <q-input
-                            v-model.trim="filter"
-                            class="q-px-md no-border-radius bg-grey-3"
-                            debounce="500"
-                            dense borderless clearable
-                        >
-                            <template v-slot:prepend>
-                                <q-icon name="mdi-magnify"/>
-                            </template>
-                        </q-input>
-                    </q-form>
+                    <q-input
+                        v-model.trim="filter"
+                        class="q-px-md no-border-radius bg-grey-3"
+                        debounce="500"
+                        dense borderless clearable
+                    >
+                        <template v-slot:prepend>
+                            <q-icon name="mdi-magnify"/>
+                        </template>
+                    </q-input>
                 </div>
             </div>
 
@@ -55,18 +53,7 @@ export default {
             },
             set(filter) {
                 this.$store.commit('pages/organizations/setFilter', filter)
-
-                this.reset()
             }
-        }
-    },
-    methods: {
-        reset() {
-            this.$q.loading.show()
-
-            this.$store.dispatch('pages/organizations/fetchOrganizations').finally(() => {
-                this.$q.loading.hide()
-            })
         }
     }
 }
