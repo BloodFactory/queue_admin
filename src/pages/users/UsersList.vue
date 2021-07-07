@@ -91,7 +91,7 @@ export default {
 }
 
 .actions {
-    width: 460px;
+    width: 470px;
 }
 
 .username,
