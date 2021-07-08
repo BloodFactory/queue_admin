@@ -85,7 +85,7 @@ export default {
                 data.append('services[]', service)
             }
 
-            data.append('timeFrom', state.timeForm)
+            data.append('timeFrom', state.timeFrom)
             data.append('timeTill', state.timeTill)
 
             if (state.needDinner) {
